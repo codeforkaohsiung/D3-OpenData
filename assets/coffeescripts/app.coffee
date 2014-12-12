@@ -1,4 +1,5 @@
 $ ->
+	
 	# get shKey
 	getKeyBtn = $('#getKey')
 	submitGetKey = $('#submitGetKey')
@@ -10,6 +11,7 @@ $ ->
 	dataset = []
 
 	$(submitGetKey).on('click', ()->
+		$(this).addClass 'loading'
 		getKey(getKeyBtn)
 	)
 
@@ -35,8 +37,10 @@ $ ->
 		.done((data) -> # Success
 			entry = data.feed.entry
 			dataRemote.push entry
+			submitGetKey.removeClass 'loading'
 			jsonDone(dataRemote)
 		).fail (jqxhr, textStatus, error) ->
+			submitGetKey.removeClass 'loading'
 			console.log "GG,沒戲唱了" #失敗
 
 
@@ -69,14 +73,21 @@ $ ->
 			.append("option").text (d) -> 
 				d
 
-		# 選擇要render的資料
-		d3.select(checkform).selectAll("label")
+		checkWrap = d3.select(checkform).selectAll('div')
 			.data(jsonKey).enter()
-			.append("label")
-			.text((d) -> d
-			).insert("input", ":first-child").attr
-				type: "checkbox"
+			.append('div')
+			.attr('class', 'ui checkbox')
+
+		checkWrap.insert("input", ":first-child").attr
+				type: 'checkbox'
 				value: (d) -> d
+
+		checkWrap.append('label')
+			.text((d) -> d)
+
+		# semetic UI 怪怪
+		$('.ui.checkbox').checkbox()
+
 
 		$("#form input, #form select").on "change", ->
 		  renderData jsonKey

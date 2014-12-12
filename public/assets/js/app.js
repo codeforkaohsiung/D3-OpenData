@@ -9,6 +9,7 @@ $(function() {
   dataRemote = [];
   dataset = [];
   $(submitGetKey).on('click', function() {
+    $(this).addClass('loading');
     return getKey(getKeyBtn);
   });
   getKey = function(input) {
@@ -30,8 +31,10 @@ $(function() {
       var entry;
       entry = data.feed.entry;
       dataRemote.push(entry);
+      submitGetKey.removeClass('loading');
       return jsonDone(dataRemote);
     }).fail(function(jqxhr, textStatus, error) {
+      submitGetKey.removeClass('loading');
       return console.log("GG,沒戲唱了");
     });
   };
@@ -61,19 +64,23 @@ $(function() {
     return jsonKey;
   };
   renderForm = function(dataRemote, jsonKey) {
+    var checkWrap;
     d3.select(xAxis).html("");
     d3.select(checkform).html("");
     d3.select(xAxis).selectAll("option").data(jsonKey).enter().append("option").text(function(d) {
       return d;
     });
-    d3.select(checkform).selectAll("label").data(jsonKey).enter().append("label").text(function(d) {
-      return d;
-    }).insert("input", ":first-child").attr({
-      type: "checkbox",
+    checkWrap = d3.select(checkform).selectAll('div').data(jsonKey).enter().append('div').attr('class', 'ui checkbox');
+    checkWrap.insert("input", ":first-child").attr({
+      type: 'checkbox',
       value: function(d) {
         return d;
       }
     });
+    checkWrap.append('label').text(function(d) {
+      return d;
+    });
+    $('.ui.checkbox').checkbox();
     return $("#form input, #form select").on("change", function() {
       return renderData(jsonKey);
     });

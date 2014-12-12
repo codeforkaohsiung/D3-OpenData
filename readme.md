@@ -1,6 +1,6 @@
-煞氣a - D3 engine
+# 煞氣a - D3 engine
 
-# Usage
+## Usage
 
 If you need to use gulp.
 
@@ -11,4 +11,5 @@ If you need to use gulp.
 Start server.
 
 	npm install
+	bower install
 	node server.js
