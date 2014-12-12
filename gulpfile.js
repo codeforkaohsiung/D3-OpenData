@@ -6,9 +6,9 @@ var gulp = require('gulp'),
 
 gulp.task('coffee', function() { //‘coffee'是排程名稱，可自定
 	gulp.src('./assets/coffeescripts/*.coffee') //來源檔案
-		.pipe(coffee()) //編譯
+		.pipe(coffee({bare: true})) //編譯
 		.pipe(concat('app.js')) //合併成一隻
-		.pipe(uglify()) //壓縮、醜化
+		//.pipe(uglify()) //壓縮、醜化
 		.pipe(gulp.dest('./public/assets/js')) //輸出位置
 });
 
