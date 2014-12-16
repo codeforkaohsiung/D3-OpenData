@@ -1,5 +1,5 @@
 $(function() {
-  var $btn, chartList, checkform, dataRemote, dataset, errorMessage, form, getJson, getJsonKey, getKey, getKeyBtn, getSpreadsheet, jsonDone, renderChart, renderData, renderForm, resetForm, submitGetKey, transformChart, xAxis;
+  var $btn, chartList, checkform, dataRemote, dataset, errorMessage, errorStatus, firstStart, form, getJson, getJsonKey, getKey, getKeyBtn, getSpreadsheet, headerBanner, jsonDone, renderChart, renderData, renderForm, resetForm, resetStatus, submitGetKey, transformChart, xAxis;
   getKeyBtn = $('#getKey');
   submitGetKey = $('#submitGetKey');
   form = '#form';
@@ -10,14 +10,29 @@ $(function() {
   dataRemote = [];
   dataset = [];
   $btn = {};
+  headerBanner = '.header-banner';
   resetForm = function() {
     $(xAxis).html('');
     $(checkform).html('');
     return $('.demo').html('');
   };
+  resetStatus = function() {
+    resetForm();
+    return $(errorMessage).addClass('hidden');
+  };
+  errorStatus = function() {
+    return $(errorMessage).removeClass('hidden');
+  };
+  firstStart = function() {
+    $(headerBanner).removeClass('index');
+    $('.section-intro').removeClass('in active');
+    return $('.section-chart').addClass('active').delay(30).queue(function() {
+      return $('.section-chart').addClass('in');
+    });
+  };
   $(submitGetKey).on('click', function() {
     $btn = $(this).button('loading');
-    resetForm();
+    resetStatus();
     return getKey(getKeyBtn);
   });
   getKey = function(input) {
@@ -41,10 +56,12 @@ $(function() {
       entry = data.feed.entry;
       dataRemote.push(entry);
       $btn.button('reset');
+      firstStart();
       resetForm();
       return jsonDone(dataRemote);
     }).fail(function(jqxhr, textStatus, error) {
       $btn.button('reset');
+      errorStatus();
       return console.log("GG,沒戲唱了");
     });
   };
@@ -131,11 +148,14 @@ $(function() {
         columns: dataset,
         type: chartCase
       },
+      size: {
+        height: 480
+      },
       axis: {
         x: {
           type: "category",
           tick: {
-            rotate: 75,
+            rotate: 45,
             multiline: false,
             culling: {
               max: 20
@@ -153,6 +173,8 @@ $(function() {
     switch (chartCase) {
       case "line":
         return chart.transform("line");
+      case "bar":
+        return chart.transform("bar");
       case "pie":
         return chart.transform("pie");
       case "area-spline":

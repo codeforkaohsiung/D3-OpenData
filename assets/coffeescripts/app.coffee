@@ -11,21 +11,39 @@ $ ->
 	dataRemote = []
 	dataset = []
 	$btn = {}
+	headerBanner = '.header-banner'
 
 	resetForm = ()->
 		$(xAxis).html ''
 		$(checkform).html ''
 		$('.demo').html ''
 
+	resetStatus = ()->
+		resetForm()
+		$(errorMessage).addClass 'hidden'
+
+	errorStatus = ()->
+		$(errorMessage).removeClass 'hidden'
+
+	firstStart = ()->
+		$(headerBanner).removeClass 'index'
+		$('.section-intro').removeClass('in active')
+		$('.section-chart').addClass('active').delay(30)
+			.queue(()->
+				$('.section-chart').addClass('in')
+			)
+	# Start 
 	$(submitGetKey).on('click', ()->
 		$btn = $(this).button('loading')
-		resetForm()
+		resetStatus()
 		getKey(getKeyBtn)
 	)
 
 	getKey = (input)->
 		shKey = input.val()
 		getSpreadsheet(shKey)
+
+	
 
 
 	# get spreadsheet
@@ -46,10 +64,12 @@ $ ->
 			entry = data.feed.entry
 			dataRemote.push entry
 			$btn.button('reset')
+			firstStart()
 			resetForm()
 			jsonDone(dataRemote)
 		).fail (jqxhr, textStatus, error) ->
 			$btn.button('reset')
+			errorStatus()
 			console.log "GG,沒戲唱了" #失敗
 
 
@@ -135,12 +155,13 @@ $ ->
 				x: "x"
 				columns: dataset
 				type: chartCase
-
+			size:
+				height: 480
 			axis:
 				x:
 					type: "category"
 					tick:
-						rotate: 75
+						rotate: 45
 						multiline: false
 						culling:
 							max: 20
@@ -153,6 +174,8 @@ $ ->
 		switch chartCase
 			when "line"
 				chart.transform "line"
+			when "bar"
+				chart.transform "bar"
 			when "pie"
 				chart.transform "pie"
 			when "area-spline"

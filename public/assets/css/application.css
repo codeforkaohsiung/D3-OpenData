@@ -41,14 +41,31 @@ html { font-size: 100%; line-height: 1.5em; }
 
 .mbl { margin-bottom: 2.25em; }
 
-.pd-m { padding: 15px; }
+.mt0 { margin-top: 0 !important; }
+
+.mts { margin-top: 0.75em; }
+
+.mtm { margin-top: 1.5em; }
+
+.mtl { margin-top: 2.25em; }
+
+.pdm { padding: 15px; }
+
+.bg-gray-lighter { background-color: #eeeeee; }
 
 .mega-dropdown ul { max-height: 320px; overflow-y: auto; }
 .mega-dropdown > ul > li > label { display: block; padding: 3px 20px; clear: both; font-weight: normal; line-height: 1.42857; color: #333333; white-space: nowrap; }
 .mega-dropdown > ul > li > label input[type="checkbox"] { margin-right: 4px; }
 .mega-dropdown.dropdown-menu-right .dropdown-menu { right: 0; left: auto; }
 
-.header-banner { height: 120px; background-color: #574751; width: 100%; display: flex; align-items: center; margin-bottom: 2.25em; }
+.header-banner { height: 120px; background-color: #574751; width: 100%; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; margin-bottom: 2.25em; -moz-transition: height 0.5s; -o-transition: height 0.5s; -webkit-transition: height 0.5s; transition: height 0.5s; }
+.header-banner.index { height: 240px; }
+
+.index-img { width: 60%; height: auto; margin: 0 auto; }
+
+.index-section { display: none; opacity: 0; -moz-transition: opacity 0.5s; -o-transition: opacity 0.5s; -webkit-transition: opacity 0.5s; transition: opacity 0.5s; }
+.index-section.in { opacity: 1; }
+.index-section.active { display: block; }
 
 /*! normalize.css v3.0.2 | MIT License | git.io/normalize */
 html { font-family: sans-serif; -ms-text-size-adjust: 100%; -webkit-text-size-adjust: 100%; }

@@ -1,6 +1,6 @@
 
-<div class="text-center header-banner">
-	<div class="col-md-6 col-md-offset-3">
+<div class="text-center header-banner index mbl">
+	<div class="col-sm-6 col-sm-offset-3">
 		<div class="input-group">
 			<input id="getKey" type="text" value="1x6C86tzJ2F8ZTau6g7uUNxSb496wuoIR2s2I9lEWQSI" class="form-control">
 			<span class="input-group-btn">
@@ -13,50 +13,57 @@
 
 
 <div class="container-fluid">
-	<div class="row mbm">
-
-		<div class="col-md-3">
-			<label>圖表類型</label>
-			<select id="chart-list" class="form-control">
-				<option value="pie">圓餅圖</option>
-				<option value="line" selected="">線條圖</option>
-				<option value="area-spline">面積圖</option>
-				<option value="donut">圓環</option>
-			</select>
-		</div>
-
-		<div class="col-md-3">
-			<label for="x-Axis">X 軸</label>
-			<select name="" id="x-Axis" class="form-control"></select>
-		</div>
-
-		<div class="col-md-3 col-md-offset-3">
-			<label for="x-Axis">資料</label>
-			<div id="form" class="dropdown mega-dropdown dropdown-menu-right">
-				<a id="dLabel" type="button" aria-haspopup="true" aria-expanded="false" class="btn btn-default block">
-				  Dropdown trigger
-				  <span class="caret"></span>
-				</a>
-				<ul id="checkform" class="dropdown-menu" >
-
-				</ul>
-			</div>
-		</div>
+	<div class="section-intro index-section in active">
+		<% include intro %>
 	</div>
 
+	<div class="section-chart index-section">
+		<div class="row mbm">
 
-	<div class="row mbl">
-		<div class="pd-m">
-			<div class="col-md-12">
-				<div id="errorMessage" class="hidden">
-					很抱歉，連接不上Google 試算表，可能是運氣不好，或者是可參考以下原因．
-				</div>
-				<div class="demo">
+			<div class="col-sm-3">
+				<label>圖表類型</label>
+				<select id="chart-list" class="form-control">
+					<option value="pie">圓餅圖</option>
+					<option value="bar">長條</option>
+					<option value="line" selected="">線條圖</option>
+					<option value="area-spline">面積圖</option>
+					<option value="donut">圓環</option>
+				</select>
+			</div>
+
+			<div class="col-sm-3">
+				<label for="x-Axis">X 軸</label>
+				<select name="" id="x-Axis" class="form-control"></select>
+			</div>
+
+			<div class="col-sm-3 col-sm-offset-3">
+				<label for="x-Axis">資料</label>
+				<div id="form" class="dropdown mega-dropdown dropdown-menu-right">
+					<a id="dLabel" type="button" aria-haspopup="true" aria-expanded="false" class="btn btn-default block">
+					  Dropdown trigger
+					  <span class="caret"></span>
+					</a>
+					<ul id="checkform" class="dropdown-menu" >
+
+					</ul>
 				</div>
 			</div>
 		</div>
-	</div>
 
+
+		<div class="row mbl">
+			<div class="pd-m">
+				<div class="col-sm-12">
+					<div id="errorMessage" class="hidden">
+						很抱歉，連接不上Google 試算表，可能是運氣不好，或者是可參考以下原因．
+					</div>
+					<div class="demo">
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
 
 
 </div>
