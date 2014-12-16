@@ -13,7 +13,7 @@ gulp.task('coffee', function() { //‘coffee'是排程名稱，可自定
 });
 
 gulp.task('compass', function() {
-  gulp.src('./assets/sass/*.sass') //來源路徑
+  gulp.src('./assets/sass/**/*.sass') //來源路徑
   .pipe(compass({ //這段內輸入config.rb的內容
     css: 'public/assets/css', //compass輸出位置
     sass: 'assets/sass', //sass來源路徑
@@ -27,7 +27,7 @@ gulp.task('compass', function() {
 
 gulp.task('watch', function () { //自定一個watch的排程名稱
   gulp.watch('./assets/coffeescripts/*.coffee', ['coffee']); //監聽路徑，以及檔案變更後所執行的任務
-  gulp.watch('./assets/sass/*.sass', ['compass']);
+  gulp.watch('./assets/sass/**/**/*.sass', ['compass']);
 });
 
 gulp.task('default', ['coffee','compass','watch']);

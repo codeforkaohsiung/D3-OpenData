@@ -7,11 +7,19 @@ $ ->
 	xAxis = '#x-Axis'
 	checkform = '#checkform'
 	chartList = '#chart-list'
+	errorMessage = '#errorMessage'
 	dataRemote = []
 	dataset = []
+	$btn = {}
+
+	resetForm = ()->
+		$(xAxis).html ''
+		$(checkform).html ''
+		$('.demo').html ''
 
 	$(submitGetKey).on('click', ()->
-		$(this).addClass 'loading'
+		$btn = $(this).button('loading')
+		resetForm()
 		getKey(getKeyBtn)
 	)
 
@@ -32,15 +40,16 @@ $ ->
 
 	getJson = (url)->
 		dataRemote = []
-
+		dataset = []
 		$.getJSON(url)
 		.done((data) -> # Success
 			entry = data.feed.entry
 			dataRemote.push entry
-			submitGetKey.removeClass 'loading'
+			$btn.button('reset')
+			resetForm()
 			jsonDone(dataRemote)
 		).fail (jqxhr, textStatus, error) ->
-			submitGetKey.removeClass 'loading'
+			$btn.button('reset')
 			console.log "GG,沒戲唱了" #失敗
 
 
@@ -65,8 +74,6 @@ $ ->
 		jsonKey
 
 	renderForm = (dataRemote, jsonKey) ->
-		d3.select(xAxis).html ""
-		d3.select(checkform).html ""
 		# X 軸的資料
 		d3.select(xAxis).selectAll("option")
 			.data(jsonKey).enter()
@@ -75,18 +82,15 @@ $ ->
 
 		checkWrap = d3.select(checkform).selectAll('div')
 			.data(jsonKey).enter()
-			.append('div')
-			.attr('class', 'ui checkbox')
-
-		checkWrap.insert("input", ":first-child").attr
+			.append('li').append('label')
+			
+		checkWrap
+			.insert('input').attr
 				type: 'checkbox'
 				value: (d) -> d
 
-		checkWrap.append('label')
+		checkWrap.append('span')
 			.text((d) -> d)
-
-		# semetic UI 怪怪
-		$('.ui.checkbox').checkbox()
 
 
 		$("#form input, #form select").on "change", ->
@@ -155,3 +159,13 @@ $ ->
 				chart.transform "area-spline"
 			when "donut"
 				chart.transform "donut"
+
+
+	#==== bootstrap function ====
+	# bootstrap dropdown -> mega dropdown
+	$('.dropdown.mega-dropdown a').on 'click', (event)-> 
+	  $(this).parent().toggleClass('open')
+
+	$('body').on 'click', (e)->
+		if (!$('.dropdown.mega-dropdown').is(e.target) && $('.dropdown.mega-dropdown').has(e.target).length is 0 && $('.open').has(e.target).length is 0)
+			$('.dropdown.mega-dropdown').removeClass('open')

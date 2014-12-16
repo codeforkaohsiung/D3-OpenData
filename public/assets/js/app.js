@@ -1,15 +1,23 @@
 $(function() {
-  var chartList, checkform, dataRemote, dataset, form, getJson, getJsonKey, getKey, getKeyBtn, getSpreadsheet, jsonDone, renderChart, renderData, renderForm, submitGetKey, transformChart, xAxis;
+  var $btn, chartList, checkform, dataRemote, dataset, errorMessage, form, getJson, getJsonKey, getKey, getKeyBtn, getSpreadsheet, jsonDone, renderChart, renderData, renderForm, resetForm, submitGetKey, transformChart, xAxis;
   getKeyBtn = $('#getKey');
   submitGetKey = $('#submitGetKey');
   form = '#form';
   xAxis = '#x-Axis';
   checkform = '#checkform';
   chartList = '#chart-list';
+  errorMessage = '#errorMessage';
   dataRemote = [];
   dataset = [];
+  $btn = {};
+  resetForm = function() {
+    $(xAxis).html('');
+    $(checkform).html('');
+    return $('.demo').html('');
+  };
   $(submitGetKey).on('click', function() {
-    $(this).addClass('loading');
+    $btn = $(this).button('loading');
+    resetForm();
     return getKey(getKeyBtn);
   });
   getKey = function(input) {
@@ -27,14 +35,16 @@ $(function() {
   };
   getJson = function(url) {
     dataRemote = [];
+    dataset = [];
     return $.getJSON(url).done(function(data) {
       var entry;
       entry = data.feed.entry;
       dataRemote.push(entry);
-      submitGetKey.removeClass('loading');
+      $btn.button('reset');
+      resetForm();
       return jsonDone(dataRemote);
     }).fail(function(jqxhr, textStatus, error) {
-      submitGetKey.removeClass('loading');
+      $btn.button('reset');
       return console.log("GG,沒戲唱了");
     });
   };
@@ -65,22 +75,19 @@ $(function() {
   };
   renderForm = function(dataRemote, jsonKey) {
     var checkWrap;
-    d3.select(xAxis).html("");
-    d3.select(checkform).html("");
     d3.select(xAxis).selectAll("option").data(jsonKey).enter().append("option").text(function(d) {
       return d;
     });
-    checkWrap = d3.select(checkform).selectAll('div').data(jsonKey).enter().append('div').attr('class', 'ui checkbox');
-    checkWrap.insert("input", ":first-child").attr({
+    checkWrap = d3.select(checkform).selectAll('div').data(jsonKey).enter().append('li').append('label');
+    checkWrap.insert('input').attr({
       type: 'checkbox',
       value: function(d) {
         return d;
       }
     });
-    checkWrap.append('label').text(function(d) {
+    checkWrap.append('span').text(function(d) {
       return d;
     });
-    $('.ui.checkbox').checkbox();
     return $("#form input, #form select").on("change", function() {
       return renderData(jsonKey);
     });
@@ -142,7 +149,7 @@ $(function() {
       return transformChart(chart, chartCase);
     });
   };
-  return transformChart = function(chart, chartCase) {
+  transformChart = function(chart, chartCase) {
     switch (chartCase) {
       case "line":
         return chart.transform("line");
@@ -154,4 +161,12 @@ $(function() {
         return chart.transform("donut");
     }
   };
+  $('.dropdown.mega-dropdown a').on('click', function(event) {
+    return $(this).parent().toggleClass('open');
+  });
+  return $('body').on('click', function(e) {
+    if (!$('.dropdown.mega-dropdown').is(e.target) && $('.dropdown.mega-dropdown').has(e.target).length === 0 && $('.open').has(e.target).length === 0) {
+      return $('.dropdown.mega-dropdown').removeClass('open');
+    }
+  });
 });

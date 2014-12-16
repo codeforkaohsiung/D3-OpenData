@@ -1,0 +1,35 @@
+
+// 960 grid
+$susy: (
+  flow: left,
+  math: fluid,
+  output: float,
+  gutter-position: inside-static,
+  container: auto,
+  container-position: center,
+  columns: 12,
+  gutters: 20px/60px ,
+  column-width: 60px,
+  global-box-sizing: content-box,
+  last-flow: to,
+  debug: (
+    image: hide,
+    color: rgba(#66f, .25),
+    output: background,
+    toggle: top right,
+  ),
+  use-custom: (
+    background-image: true,
+    background-options: false,
+    box-sizing: true,
+    clearfix: false,
+    rem: false,
+  )
+);
+
+$default-width: 960px;
+
+//breakpoint
+$device-m: 960px;
+
+
