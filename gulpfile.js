@@ -1,19 +1,23 @@
 var gulp = require('gulp'),
 	concat = require('gulp-concat'),
 	uglify = require('gulp-uglify'),
+  plumber = require('gulp-plumber'),
 	compass = require('gulp-compass'),
 	coffee = require('gulp-coffee');
 
 gulp.task('coffee', function() { //‘coffee'是排程名稱，可自定
 	gulp.src('./assets/coffeescripts/*.coffee') //來源檔案
+    .pipe(plumber())
 		.pipe(coffee({bare: true})) //編譯
 		.pipe(concat('app.js')) //合併成一隻
 		//.pipe(uglify()) //壓縮、醜化
+
 		.pipe(gulp.dest('./public/assets/js')) //輸出位置
 });
 
 gulp.task('compass', function() {
   gulp.src('./assets/sass/**/*.sass') //來源路徑
+  .pipe(plumber())
   .pipe(compass({ //這段內輸入config.rb的內容
     css: 'public/assets/css', //compass輸出位置
     sass: 'assets/sass', //sass來源路徑
