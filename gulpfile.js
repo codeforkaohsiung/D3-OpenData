@@ -21,7 +21,7 @@ gulp.task('compass', function() {
   .pipe(compass({ //這段內輸入config.rb的內容
     css: 'public/assets/css', //compass輸出位置
     sass: 'assets/sass', //sass來源路徑
-    sourcemap: true, //compass 1.0 sourcemap
+    sourcemap: false, //compass 1.0 sourcemap
     style: 'compact', //CSS壓縮格式，預設(nested)
     comments: false, //是否要註解，預設(true)
     //require: ['susy'] //額外套件 susy

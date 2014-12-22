@@ -1,5 +1,5 @@
 $ ->
-	
+
 	# get shKey
 	getKeyBtn = $('#getKey')
 	submitGetKey = $('#submitGetKey')
@@ -12,6 +12,30 @@ $ ->
 	dataset = []
 	$btn = {}
 	headerBanner = '.header-banner'
+	chartType = [
+		{
+			name: "長條"
+			key: "bar"
+		}
+		{
+			name: "線條圖"
+			key: "line"
+		}
+		{
+			name: "面積圖"
+			key: "area-spline"
+		}
+		{
+			name: "圓餅圖"
+			key: "pie"
+		}
+		
+		{
+			name: "圓環"
+			key: "donut"
+		}
+	]
+
 
 	resetForm = ()->
 		$(xAxis).html ''
@@ -69,6 +93,7 @@ $ ->
 			jsonDone(dataRemote)
 		).fail (jqxhr, textStatus, error) ->
 			$btn.button('reset')
+			firstStart()
 			errorStatus()
 			console.log "GG,沒戲唱了" #失敗
 
@@ -94,12 +119,22 @@ $ ->
 		jsonKey
 
 	renderForm = (dataRemote, jsonKey) ->
+		# 圖表類型
+		d3.select(chartList).selectAll('option')
+			.data(chartType).enter()
+			.append('option')
+			.attr 'value', (d) -> 
+				d.key
+			.text (d) -> 
+				d.name
+
 		# X 軸的資料
-		d3.select(xAxis).selectAll("option")
+		d3.select(xAxis).selectAll('option')
 			.data(jsonKey).enter()
 			.append("option").text (d) -> 
 				d
 
+		# Y 軸資料
 		checkWrap = d3.select(checkform).selectAll('div')
 			.data(jsonKey).enter()
 			.append('li').append('label')
@@ -166,6 +201,7 @@ $ ->
 						culling:
 							max: 20
 		)
+
 		$(chartList).on "change", ->
 		  chartCase = $(this).val()
 		  transformChart chart, chartCase
@@ -182,6 +218,9 @@ $ ->
 				chart.transform "area-spline"
 			when "donut"
 				chart.transform "donut"
+
+
+	## Canvas to png
 
 
 	#==== bootstrap function ====

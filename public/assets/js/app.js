@@ -1,5 +1,5 @@
 $(function() {
-  var $btn, chartList, checkform, dataRemote, dataset, errorMessage, errorStatus, firstStart, form, getJson, getJsonKey, getKey, getKeyBtn, getSpreadsheet, headerBanner, jsonDone, renderChart, renderData, renderForm, resetForm, resetStatus, submitGetKey, transformChart, xAxis;
+  var $btn, chartList, chartType, checkform, dataRemote, dataset, errorMessage, errorStatus, firstStart, form, getJson, getJsonKey, getKey, getKeyBtn, getSpreadsheet, headerBanner, jsonDone, renderChart, renderData, renderForm, resetForm, resetStatus, submitGetKey, transformChart, xAxis;
   getKeyBtn = $('#getKey');
   submitGetKey = $('#submitGetKey');
   form = '#form';
@@ -11,6 +11,24 @@ $(function() {
   dataset = [];
   $btn = {};
   headerBanner = '.header-banner';
+  chartType = [
+    {
+      name: "長條",
+      key: "bar"
+    }, {
+      name: "線條圖",
+      key: "line"
+    }, {
+      name: "面積圖",
+      key: "area-spline"
+    }, {
+      name: "圓餅圖",
+      key: "pie"
+    }, {
+      name: "圓環",
+      key: "donut"
+    }
+  ];
   resetForm = function() {
     $(xAxis).html('');
     $(checkform).html('');
@@ -61,6 +79,7 @@ $(function() {
       return jsonDone(dataRemote);
     }).fail(function(jqxhr, textStatus, error) {
       $btn.button('reset');
+      firstStart();
       errorStatus();
       return console.log("GG,沒戲唱了");
     });
@@ -92,7 +111,12 @@ $(function() {
   };
   renderForm = function(dataRemote, jsonKey) {
     var checkWrap;
-    d3.select(xAxis).selectAll("option").data(jsonKey).enter().append("option").text(function(d) {
+    d3.select(chartList).selectAll('option').data(chartType).enter().append('option').attr('value', function(d) {
+      return d.key;
+    }).text(function(d) {
+      return d.name;
+    });
+    d3.select(xAxis).selectAll('option').data(jsonKey).enter().append("option").text(function(d) {
       return d;
     });
     checkWrap = d3.select(checkform).selectAll('div').data(jsonKey).enter().append('li').append('label');
