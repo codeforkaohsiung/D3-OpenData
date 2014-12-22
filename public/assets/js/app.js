@@ -1,5 +1,24 @@
+var userControl;
+
+userControl = {};
+
+userControl = {
+  chartType: {
+    name: "圓餅圖",
+    value: "pie"
+  },
+  xAxis: {
+    name: "gsx$時間",
+    value: "gsx$時間"
+  },
+  data: {
+    name: "",
+    value: ["gsx$新北市總計", "gsx$臺北市總計", "gsx$高雄市總計"]
+  }
+};
+
 $(function() {
-  var $btn, chartList, chartType, checkform, dataRemote, dataset, errorMessage, errorStatus, firstStart, form, getJson, getJsonKey, getKey, getKeyBtn, getSpreadsheet, headerBanner, jsonDone, renderChart, renderData, renderForm, resetForm, resetStatus, submitGetKey, transformChart, xAxis;
+  var $btn, chartList, chartType, checkform, dataRemote, dataset, errorMessage, errorStatus, firstStart, form, getJson, getJsonKey, getKey, getKeyBtn, getSpreadsheet, headerBanner, jsonDone, loadUserControl, renderChart, renderData, renderForm, resetForm, resetStatus, submitGetKey, updateUserControl, xAxis;
   getKeyBtn = $('#getKey');
   submitGetKey = $('#submitGetKey');
   form = '#form';
@@ -129,20 +148,65 @@ $(function() {
     checkWrap.append('span').text(function(d) {
       return d;
     });
-    return $("#form input, #form select").on("change", function() {
-      return renderData(jsonKey);
+    if ($.isEmptyObject(userControl)) {
+      console.log('updateUserControl()');
+      return updateUserControl();
+    } else {
+      console.log('loadUserControl()');
+      return loadUserControl();
+    }
+  };
+  $('#form').on("change", function() {
+    userControl = {};
+    return updateUserControl();
+  });
+  updateUserControl = function() {
+    var userDatakey;
+    userDatakey = [];
+    $.each($(checkform).find('input:checked'), function() {
+      return userDatakey.push($(this).val());
+    });
+    userControl.chartType = {
+      name: $(chartList).find('option').filter(':selected').text(),
+      value: $(chartList).val()
+    };
+    userControl.xAxis = {
+      name: $(xAxis).find('option').filter(':selected').text(),
+      value: $(xAxis).val()
+    };
+    userControl.data = {
+      name: '',
+      value: userDatakey
+    };
+    console.log(JSON.stringify(userControl));
+    return renderData();
+  };
+  loadUserControl = function() {
+    $.each($(chartList).find('option'), function(i, d) {
+      if ($(this).text() === userControl.chartType.name) {
+        return $(this).prop('selected', true);
+      }
+    });
+    $.each($(xAxis).find('option'), function(i, d) {
+      if ($(this).text() === userControl.xAxis.name) {
+        return $(this).prop('selected', true);
+      }
+    });
+    return $.each(userControl.data.value, function(i, d) {
+      return $.each($(checkform).find('input'), function(i2, d2) {
+        if ($(this).val() === d) {
+          return $(this).prop('checked', true);
+        }
+      });
     });
   };
-  renderData = function(jsonKey) {
+  renderData = function() {
     var dataTemp, dataVal, i, x, xVal;
     dataset = [];
     x = ["x"];
-    xVal = $(xAxis).val();
-    dataVal = [];
+    xVal = userControl.xAxis.value;
+    dataVal = userControl.data.value;
     dataTemp = [];
-    $.each($(checkform).find("input:checked"), function(id) {
-      return dataVal.push($(this).val());
-    });
     i = 0;
     while (i < dataVal.length) {
       dataTemp.push([dataVal[i]]);
@@ -162,10 +226,10 @@ $(function() {
     }
     return renderChart(dataset, x);
   };
-  renderChart = function(dataset, x) {
+  return renderChart = function(dataset, x) {
     var chart, chartCase;
-    chartCase = $(chartList).val();
-    chart = c3.generate({
+    chartCase = userControl.chartType.value;
+    return chart = c3.generate({
       bindto: ".demo",
       data: {
         x: "x",
@@ -188,25 +252,10 @@ $(function() {
         }
       }
     });
-    return $(chartList).on("change", function() {
-      chartCase = $(this).val();
-      return transformChart(chart, chartCase);
-    });
   };
-  transformChart = function(chart, chartCase) {
-    switch (chartCase) {
-      case "line":
-        return chart.transform("line");
-      case "bar":
-        return chart.transform("bar");
-      case "pie":
-        return chart.transform("pie");
-      case "area-spline":
-        return chart.transform("area-spline");
-      case "donut":
-        return chart.transform("donut");
-    }
-  };
+});
+
+$(function() {
   $('.dropdown.mega-dropdown a').on('click', function(event) {
     return $(this).parent().toggleClass('open');
   });

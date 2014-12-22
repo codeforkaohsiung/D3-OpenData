@@ -1,5 +1,22 @@
-$ ->
+userControl = {}
+userControl =   
+	chartType:
+		name: "圓餅圖"
+		value: "pie"
 
+	xAxis:
+		name: "gsx$時間"
+		value: "gsx$時間"
+
+	data:
+		name: ""
+		value: [
+			"gsx$新北市總計"
+			"gsx$臺北市總計"
+			"gsx$高雄市總計"
+		]
+
+$ ->
 	# get shKey
 	getKeyBtn = $('#getKey')
 	submitGetKey = $('#submitGetKey')
@@ -56,6 +73,8 @@ $ ->
 			.queue(()->
 				$('.section-chart').addClass('in')
 			)
+
+
 	# Start 
 	$(submitGetKey).on('click', ()->
 		$btn = $(this).button('loading')
@@ -148,25 +167,71 @@ $ ->
 			.text((d) -> d)
 
 
-		$("#form input, #form select").on "change", ->
-		  renderData jsonKey
+		if $.isEmptyObject(userControl)
+			console.log 'updateUserControl()'
+			updateUserControl()
+		else
+			console.log 'loadUserControl()'
+			loadUserControl()
+			
 
-	renderData = (jsonKey) ->
+
+	$('#form').on "change", ->
+		userControl = {}
+		updateUserControl()
+
+	updateUserControl = ->
+		userDatakey = []
+		$.each $(checkform).find('input:checked'), ()->
+			userDatakey.push $(this).val()
+
+		# 圖表類型
+		userControl.chartType = 
+			name: $(chartList).find('option').filter(':selected').text()
+			value: $(chartList).val()
+		# X軸
+		userControl.xAxis =
+			name: $(xAxis).find('option').filter(':selected').text()
+			value: $(xAxis).val()
+		# 選取的資料
+		userControl.data =
+			name: ''
+			value: userDatakey
+
+		console.log(JSON.stringify(userControl))
+		renderData()
+
+	loadUserControl = ->
+		# 將預設資料存回input 及 select
+		$.each $(chartList).find('option'), (i,d)->
+			if $(@).text() is userControl.chartType.name
+				$(@).prop('selected', true)
+
+		$.each $(xAxis).find('option'), (i,d)->
+			if $(@).text() is userControl.xAxis.name
+				$(@).prop('selected', true)
+
+		$.each userControl.data.value, (i, d)->
+			$.each $(checkform).find('input'), (i2,d2)->
+				if $(@).val() is d
+					$(@).prop('checked', true)
+
+	renderData = () ->
 		dataset = []
 		x = ["x"]
-		xVal = $(xAxis).val()
-		dataVal = []
+		xVal = userControl.xAxis.value
+		dataVal = userControl.data.value
 		dataTemp = []
 		
 		#get checkbox data key
-		$.each $(checkform).find("input:checked"), (id) ->
-			dataVal.push $(this).val()
-
+		# dataVal = userControl.data.value
+		
 		i = 0
 		while i < dataVal.length
 			dataTemp.push [dataVal[i]]
 			i++
-		
+
+
 		# convert to c3 json
 		$.each dataRemote[0], (i, d) ->
 			x.push d[xVal].$t
@@ -183,7 +248,7 @@ $ ->
 
 	renderChart = (dataset, x) ->
 		# C3.js Chart
-		chartCase = $(chartList).val()
+		chartCase = userControl.chartType.value
 		chart = c3.generate(
 			bindto: ".demo"
 			data:
@@ -202,32 +267,25 @@ $ ->
 							max: 20
 		)
 
-		$(chartList).on "change", ->
-		  chartCase = $(this).val()
-		  transformChart chart, chartCase
+	# 	$(chartList).on "change", ->
+	# 	  chartCase = $(this).val()
+	# 	  transformChart chart, chartCase
 		
-	transformChart = (chart, chartCase) ->
-		switch chartCase
-			when "line"
-				chart.transform "line"
-			when "bar"
-				chart.transform "bar"
-			when "pie"
-				chart.transform "pie"
-			when "area-spline"
-				chart.transform "area-spline"
-			when "donut"
-				chart.transform "donut"
+	# transformChart = (chart, chartCase) ->
+	# 	switch chartCase
+	# 		when "line"
+	# 			chart.transform "line"
+	# 		when "bar"
+	# 			chart.transform "bar"
+	# 		when "pie"
+	# 			chart.transform "pie"
+	# 		when "area-spline"
+	# 			chart.transform "area-spline"
+	# 		when "donut"
+	# 			chart.transform "donut"
 
 
 	## Canvas to png
 
 
-	#==== bootstrap function ====
-	# bootstrap dropdown -> mega dropdown
-	$('.dropdown.mega-dropdown a').on 'click', (event)-> 
-	  $(this).parent().toggleClass('open')
-
-	$('body').on 'click', (e)->
-		if (!$('.dropdown.mega-dropdown').is(e.target) && $('.dropdown.mega-dropdown').has(e.target).length is 0 && $('.open').has(e.target).length is 0)
-			$('.dropdown.mega-dropdown').removeClass('open')
+	
