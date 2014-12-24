@@ -18,8 +18,9 @@ userControl = {
 };
 
 $(function() {
-  var $btn, chartList, chartType, checkform, dataRemote, dataset, errorMessage, errorStatus, firstStart, form, getJson, getJsonKey, getKey, getKeyBtn, getSpreadsheet, headerBanner, jsonDone, loadUserControl, renderChart, renderData, renderForm, resetForm, resetStatus, submitGetKey, updateUserControl, xAxis;
+  var $btn, chartList, chartType, checkform, dataRemote, dataset, errorMessage, errorStatus, firstStart, form, getJson, getJsonKey, getKey, getKeyBtn, getSpreadsheet, headerBanner, jsonDone, loadSheet, loadUserControl, renderChart, renderData, renderForm, resetForm, resetStatus, submitGetKey, updateUserControl, xAxis;
   getKeyBtn = $('#getKey');
+  loadSheet = $('.load-sheet');
   submitGetKey = $('#submitGetKey');
   form = '#form';
   xAxis = '#x-Axis';
@@ -72,6 +73,13 @@ $(function() {
     resetStatus();
     return getKey(getKeyBtn);
   });
+  loadSheet.on('click', function() {
+    var shKey;
+    $btn = $(this).button('loading');
+    resetStatus();
+    shKey = $(this).attr('data-key');
+    return getSpreadsheet(shKey);
+  });
   getKey = function(input) {
     var shKey;
     shKey = input.val();
@@ -108,8 +116,7 @@ $(function() {
     jsonKey = [];
     jsonKey = getJsonKey(dataRemote);
     renderForm(dataRemote, jsonKey);
-    renderData(dataRemote, jsonKey);
-    return console.log(jsonKey);
+    return renderData(dataRemote, jsonKey);
   };
   getJsonKey = function(obj) {
     var i, jsonKey, key, orgKey, prefix;
@@ -149,10 +156,8 @@ $(function() {
       return d;
     });
     if ($.isEmptyObject(userControl)) {
-      console.log('updateUserControl()');
       return updateUserControl();
     } else {
-      console.log('loadUserControl()');
       return loadUserControl();
     }
   };
@@ -178,7 +183,6 @@ $(function() {
       name: '',
       value: userDatakey
     };
-    console.log(JSON.stringify(userControl));
     return renderData();
   };
   loadUserControl = function() {
@@ -250,18 +254,24 @@ $(function() {
             }
           }
         }
+      },
+      subchart: {
+        show: true
       }
     });
   };
 });
 
+
+
 $(function() {
   $('.dropdown.mega-dropdown a').on('click', function(event) {
     return $(this).parent().toggleClass('open');
   });
-  return $('body').on('click', function(e) {
+  $('body').on('click', function(e) {
     if (!$('.dropdown.mega-dropdown').is(e.target) && $('.dropdown.mega-dropdown').has(e.target).length === 0 && $('.open').has(e.target).length === 0) {
       return $('.dropdown.mega-dropdown').removeClass('open');
     }
   });
+  return $('[data-toggle="tooltip"]').tooltip();
 });

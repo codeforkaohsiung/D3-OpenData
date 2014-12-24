@@ -16,9 +16,11 @@ userControl =
 			"gsx$高雄市總計"
 		]
 
+
 $ ->
 	# get shKey
 	getKeyBtn = $('#getKey')
+	loadSheet = $('.load-sheet')
 	submitGetKey = $('#submitGetKey')
 	form = '#form'
 	xAxis = '#x-Axis'
@@ -82,6 +84,12 @@ $ ->
 		getKey(getKeyBtn)
 	)
 
+	loadSheet.on 'click', ()->
+		$btn = $(this).button('loading')
+		resetStatus()
+		shKey = $(@).attr 'data-key'
+		getSpreadsheet(shKey)
+
 	getKey = (input)->
 		shKey = input.val()
 		getSpreadsheet(shKey)
@@ -122,7 +130,7 @@ $ ->
 		jsonKey = getJsonKey(dataRemote)
 		renderForm(dataRemote, jsonKey)
 		renderData(dataRemote, jsonKey)
-		console.log jsonKey
+		# console.log jsonKey
 
 	# get spreadsheet th
 	getJsonKey = (obj)->
@@ -168,10 +176,8 @@ $ ->
 
 
 		if $.isEmptyObject(userControl)
-			console.log 'updateUserControl()'
 			updateUserControl()
 		else
-			console.log 'loadUserControl()'
 			loadUserControl()
 			
 
@@ -198,7 +204,7 @@ $ ->
 			name: ''
 			value: userDatakey
 
-		console.log(JSON.stringify(userControl))
+		# console.log(JSON.stringify(userControl))
 		renderData()
 
 	loadUserControl = ->
@@ -265,8 +271,12 @@ $ ->
 						multiline: false
 						culling:
 							max: 20
+			# zoom: 
+			# 	enabled: true
+			subchart:
+				show: true
 		)
-
+ 
 	# 	$(chartList).on "change", ->
 	# 	  chartCase = $(this).val()
 	# 	  transformChart chart, chartCase
@@ -286,6 +296,6 @@ $ ->
 
 
 	## Canvas to png
-
+ 
 
 	

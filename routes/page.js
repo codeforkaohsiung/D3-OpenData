@@ -7,4 +7,7 @@ exports.add = function(req, res) {
 exports.doc = function(req, res) {
     res.render('pages/doc');
 };
+exports.showcase = function(req, res) {
+    res.render('pages/showcase');
+};
 

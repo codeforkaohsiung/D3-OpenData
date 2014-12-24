@@ -8,9 +8,7 @@
 			</span>
 		</div>
 	</div>
-	
 </div>
-
 
 <div class="container-fluid">
 	<div class="section-intro index-section in active">
@@ -18,78 +16,7 @@
 	</div>
 
 	<div class="section-chart index-section">
-		<div id="errorMessage" class="hidden alert alert-danger">
-			很抱歉，連接不上Google 試算表，可能是運氣不好，或者參考一下文件看看發生了什麼問題。
-		</div>
-		<div id="form" class="row mbm">
-
-			<div class="col-sm-3">
-				<label>圖表類型</label>
-				<select id="chart-list" class="form-control">
-
-				</select>
-			</div>
-
-			<div class="col-sm-3">
-				<label for="x-Axis">X 軸</label>
-				<select name="" id="x-Axis" class="form-control"></select>
-			</div>
-
-			<div class="col-sm-3 col-sm-offset-3">
-				<label for="x-Axis">資料</label>
-				<div class="dropdown mega-dropdown dropdown-menu-right">
-					<a type="button" class="btn btn-default block">
-					  選擇資料
-					  <span class="caret"></span>
-					</a>
-					<ul id="checkform" class="dropdown-menu" >
-
-					</ul>
-				</div>
-			</div>
-		</div>
-
-		<div class="row mbl">
-			<div class="pd-m">
-				<div class="col-sm-12">
-					
-					<div class="demo">
-					</div>
-				</div>
-			</div>
-		</div>
-	
-
-		<!-- data save -->
-		<div class="row mbl">
-			<div class="col-sm-6">
-				<img id="chartImg" src="upload/test-img.png" alt="" class="img-responsive">
-				<canvas id="canvasImg" class="hidden"></canvas>
-				<div class="text-center mtm">
-					<button id="updateImg" type="button" class="btn btn-default btn-xs">更新圖片</button>
-					<button id="downloadImg" type="button" class="btn btn-default btn-xs">下載圖片</button>
-				</div>
-			</div>
-			<div class="col-sm-6">
-				<form action="" class="form">
-					<div class="form-group">
-						<label for="chartName">圖表名稱</label>
-						<input type="text" class="form-control" id="chartName" placeholder="圖表名稱">
-					</div>
-					<div class="form-group">
-						<label for="chartKey">Google 試算表 Key </label>
-						<input type="text" class="form-control" id="chartKey" disabled="">
-					</div>
-					<div class="form-group">
-						<label for="chartDiscription">描述</label>
-						<textarea class="form-control" id="chartDiscription" rows="3" placeholder="對你的圖表做點描述"></textarea>
-					</div>
-					<div class="text-right">
-						<button type="submit" class="btn btn-success">分享</button>
-					</div>
-				</form>
-			</div>
-		</div>
+		<% include chart %>
 	</div>
 
 </div>
