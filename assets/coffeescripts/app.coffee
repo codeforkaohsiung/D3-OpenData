@@ -22,6 +22,7 @@ $ ->
 	getKeyBtn = $('#getKey')
 	loadSheet = $('.load-sheet')
 	submitGetKey = $('#submitGetKey')
+	chartSlider = $('#chart-slider')
 	form = '#form'
 	xAxis = '#x-Axis'
 	checkform = '#checkform'
@@ -176,18 +177,59 @@ $ ->
 			.text((d) -> replaceGSX(d))
 
 
+		# render slider
+		uiSlider()
+
 		if $.isEmptyObject(userControl)
 			updateUserControl()
 		else
 			loadUserControl()
-			
+		
+	xTemp = ''	
+	uiSlider = ()->
+		xVal = $(xAxis).val()
+		xData = []
+		if xTemp != xVal
+			xTemp = xVal
+			max = 0
+			min = 0
+			# load x data
+			$.each dataRemote[0], (i, d) ->
+				xData.push d[xVal].$t
+			xDataMax = xData.length
 
-	
+			console.log xData
+			# ui slider
+			slider = chartSlider.slider(
+				range: true,
+				min: 0,
+				max: xDataMax,
+				values: [ 0, xDataMax],
+				slide: (event, ui)->
+					max = ui.values[1]
+					min = ui.values[0]
+					renderSliderValue(min, max)
+					# 更新資料
+					setTimeout( ->
+						userControl = {}
+						updateUserControl()
+					,100)
+				)		
+		
+		renderSliderValue = (min, max)->
+			$('#slider-min').text(xData[min])
+			$('#slider-max').text(xData[max])
+
+		renderSliderValue(0, chartSlider.slider('values', 1) - 1)
 
 
 	$('#form').on "change", ->
+		# Slider 也必須綁定以下function
 		userControl = {}
+		uiSlider()
 		updateUserControl()
+
+		
 
 	updateUserControl = ->
 		userDatakey = []
@@ -206,11 +248,19 @@ $ ->
 		userControl.data =
 			name: ''
 			value: userDatakey
+		# 資料範圍
+		userControl.range =
+			name: $(xAxis).val()
+			min: chartSlider.slider('values', 0)
+			max: chartSlider.slider('values', 1)
+		
+
+		# uiSlider(userControl.xAxis.value)
+
 
 		console.log(JSON.stringify(userControl))
+		
 		renderData()
-
-
 
 	loadUserControl = ->
 		# 將預設資料存回input 及 select
@@ -227,13 +277,16 @@ $ ->
 				if $(@).val() is d
 					$(@).prop('checked', true)
 
+
 	renderData = () ->
 		dataset = []
 		x = ["x"]
 		xVal = userControl.xAxis.value
 		dataVal = userControl.data.value
 		dataTemp = []
-		
+
+		min = userControl.range.min
+		max = userControl.range.max
 		#get checkbox data key
 		# dataVal = userControl.data.value
 		
@@ -245,9 +298,11 @@ $ ->
 
 		# convert to c3 json
 		$.each dataRemote[0], (i, d) ->
-			x.push d[xVal].$t
+			if (i >= min and i <= max)
+				x.push d[xVal].$t
 			$.each dataVal, (i2, d2) ->
-				dataTemp[i2].push d3.round(d[d2].$t)
+				if (i >= min and i <= max)
+					dataTemp[i2].push d3.round(d[d2].$t)
 
 		dataset.push x
 

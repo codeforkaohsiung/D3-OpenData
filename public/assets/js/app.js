@@ -3,10 +3,11 @@ var userControl;
 userControl = {};
 
 $(function() {
-  var $btn, chartList, chartType, checkform, dataRemote, dataset, errorMessage, errorStatus, firstStart, form, getJson, getJsonKey, getKey, getKeyBtn, getSpreadsheet, headerBanner, jsonDone, loadSheet, loadUserControl, pageValueInput, renderChart, renderData, renderForm, replaceGSX, resetForm, resetStatus, shKey, submitGetKey, updateUserControl, xAxis;
+  var $btn, chartList, chartSlider, chartType, checkform, dataRemote, dataset, errorMessage, errorStatus, firstStart, form, getJson, getJsonKey, getKey, getKeyBtn, getSpreadsheet, headerBanner, jsonDone, loadSheet, loadUserControl, pageValueInput, renderChart, renderData, renderForm, replaceGSX, resetForm, resetStatus, shKey, submitGetKey, uiSlider, updateUserControl, xAxis, xTemp;
   getKeyBtn = $('#getKey');
   loadSheet = $('.load-sheet');
   submitGetKey = $('#submitGetKey');
+  chartSlider = $('#chart-slider');
   form = '#form';
   xAxis = '#x-Axis';
   checkform = '#checkform';
@@ -141,14 +142,52 @@ $(function() {
     checkWrap.append('span').text(function(d) {
       return replaceGSX(d);
     });
+    uiSlider();
     if ($.isEmptyObject(userControl)) {
       return updateUserControl();
     } else {
       return loadUserControl();
     }
   };
+  xTemp = '';
+  uiSlider = function() {
+    var max, min, renderSliderValue, slider, xData, xDataMax, xVal;
+    xVal = $(xAxis).val();
+    xData = [];
+    if (xTemp !== xVal) {
+      xTemp = xVal;
+      max = 0;
+      min = 0;
+      $.each(dataRemote[0], function(i, d) {
+        return xData.push(d[xVal].$t);
+      });
+      xDataMax = xData.length;
+      console.log(xData);
+      slider = chartSlider.slider({
+        range: true,
+        min: 0,
+        max: xDataMax,
+        values: [0, xDataMax],
+        slide: function(event, ui) {
+          max = ui.values[1];
+          min = ui.values[0];
+          renderSliderValue(min, max);
+          return setTimeout(function() {
+            userControl = {};
+            return updateUserControl();
+          }, 100);
+        }
+      });
+    }
+    renderSliderValue = function(min, max) {
+      $('#slider-min').text(xData[min]);
+      return $('#slider-max').text(xData[max]);
+    };
+    return renderSliderValue(0, chartSlider.slider('values', 1) - 1);
+  };
   $('#form').on("change", function() {
     userControl = {};
+    uiSlider();
     return updateUserControl();
   });
   updateUserControl = function() {
@@ -168,6 +207,11 @@ $(function() {
     userControl.data = {
       name: '',
       value: userDatakey
+    };
+    userControl.range = {
+      name: $(xAxis).val(),
+      min: chartSlider.slider('values', 0),
+      max: chartSlider.slider('values', 1)
     };
     console.log(JSON.stringify(userControl));
     return renderData();
@@ -192,21 +236,27 @@ $(function() {
     });
   };
   renderData = function() {
-    var dataTemp, dataVal, i, x, xVal;
+    var dataTemp, dataVal, i, max, min, x, xVal;
     dataset = [];
     x = ["x"];
     xVal = userControl.xAxis.value;
     dataVal = userControl.data.value;
     dataTemp = [];
+    min = userControl.range.min;
+    max = userControl.range.max;
     i = 0;
     while (i < dataVal.length) {
       dataTemp.push([dataVal[i]]);
       i++;
     }
     $.each(dataRemote[0], function(i, d) {
-      x.push(d[xVal].$t);
+      if (i >= min && i <= max) {
+        x.push(d[xVal].$t);
+      }
       return $.each(dataVal, function(i2, d2) {
-        return dataTemp[i2].push(d3.round(d[d2].$t));
+        if (i >= min && i <= max) {
+          return dataTemp[i2].push(d3.round(d[d2].$t));
+        }
       });
     });
     dataset.push(x);
