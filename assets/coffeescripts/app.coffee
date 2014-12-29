@@ -1,20 +1,20 @@
 userControl = {}
-userControl =   
-	chartType:
-		name: "圓餅圖"
-		value: "pie"
+# userControl =   
+# 	chartType:
+# 		name: "圓餅圖"
+# 		value: "pie"
 
-	xAxis:
-		name: "gsx$時間"
-		value: "gsx$時間"
+# 	xAxis:
+# 		name: "gsx$時間"
+# 		value: "gsx$時間"
 
-	data:
-		name: ""
-		value: [
-			"gsx$新北市總計"
-			"gsx$臺北市總計"
-			"gsx$高雄市總計"
-		]
+# 	data:
+# 		name: ""
+# 		value: [
+# 			"gsx$新北市總計"
+# 			"gsx$臺北市總計"
+# 			"gsx$高雄市總計"
+# 		]
 
 
 $ ->
@@ -56,6 +56,7 @@ $ ->
 	]
 
 
+	
 	resetForm = ()->
 		$(xAxis).html ''
 		$(checkform).html ''
@@ -69,6 +70,8 @@ $ ->
 		$(errorMessage).removeClass 'hidden'
 
 	firstStart = ()->
+		if $btn.length > 0
+			$btn.button('reset')
 		$(headerBanner).removeClass 'index'
 		$('.section-intro').removeClass('in active')
 		$('.section-chart').addClass('active').delay(30)
@@ -114,12 +117,10 @@ $ ->
 		.done((data) -> # Success
 			entry = data.feed.entry
 			dataRemote.push entry
-			$btn.button('reset')
 			firstStart()
 			resetForm()
 			jsonDone(dataRemote)
 		).fail (jqxhr, textStatus, error) ->
-			$btn.button('reset')
 			firstStart()
 			errorStatus()
 			console.log "GG,沒戲唱了" #失敗
@@ -172,7 +173,7 @@ $ ->
 				value: (d) -> d
 
 		checkWrap.append('span')
-			.text((d) -> d)
+			.text((d) -> replaceGSX(d))
 
 
 		if $.isEmptyObject(userControl)
@@ -180,6 +181,8 @@ $ ->
 		else
 			loadUserControl()
 			
+
+	
 
 
 	$('#form').on "change", ->
@@ -204,8 +207,10 @@ $ ->
 			name: ''
 			value: userDatakey
 
-		# console.log(JSON.stringify(userControl))
+		console.log(JSON.stringify(userControl))
 		renderData()
+
+
 
 	loadUserControl = ->
 		# 將預設資料存回input 及 select
@@ -277,25 +282,17 @@ $ ->
 				show: true
 		)
  
-	# 	$(chartList).on "change", ->
-	# 	  chartCase = $(this).val()
-	# 	  transformChart chart, chartCase
-		
-	# transformChart = (chart, chartCase) ->
-	# 	switch chartCase
-	# 		when "line"
-	# 			chart.transform "line"
-	# 		when "bar"
-	# 			chart.transform "bar"
-	# 		when "pie"
-	# 			chart.transform "pie"
-	# 		when "area-spline"
-	# 			chart.transform "area-spline"
-	# 		when "donut"
-	# 			chart.transform "donut"
+	# 取代文字
+	replaceGSX = (str)->
+		return str.replace('gsx$', '')
+
+	# By page
+	pageValueInput = $('#page-value')
+	if (pageValueInput.length > 0)
+		shKey = pageValueInput.attr('value')
+		userControl = pageUserControl
+		getSpreadsheet(shKey)
 
 
-	## Canvas to png
- 
 
 	

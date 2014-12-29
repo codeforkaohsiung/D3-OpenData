@@ -4,7 +4,7 @@ $banner-height: 120px
 
 .header-banner
 	height: 120px
-	background-color: $invert-color
+	position: relative
 	width: 100%
 	+display-flex(flex)
 	+align-items(center)
@@ -14,7 +14,18 @@ $banner-height: 120px
 	&.index
 		height: $banner-height * 2
 	
-.index-img
+.banner-imgae
+	position: absolute
+	background: image-url("banner141229.jpg") center center
+	+background-size(cover)
+	background-color: $invert-color
+	+filter(grayscale(90%))
+	top: 0
+	left: 0
+	right: 0
+	bottom: 0
+
+.index-ico
 	width: 60%
 	height: auto
 	margin: 0 auto

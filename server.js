@@ -24,7 +24,7 @@ app.get('/', page.index);
 app.get('/add', page.add);
 app.get('/doc', page.doc);
 app.get('/showcase', page.showcase);
-
+app.get('/demopage', page.demopage);
 
    
 

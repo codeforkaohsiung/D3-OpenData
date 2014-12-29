@@ -10,4 +10,7 @@ exports.doc = function(req, res) {
 exports.showcase = function(req, res) {
     res.render('pages/showcase');
 };
+exports.demopage = function(req, res) {
+    res.render('pages/demopage');
+};
 

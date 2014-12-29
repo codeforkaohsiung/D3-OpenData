@@ -2,23 +2,8 @@ var userControl;
 
 userControl = {};
 
-userControl = {
-  chartType: {
-    name: "圓餅圖",
-    value: "pie"
-  },
-  xAxis: {
-    name: "gsx$時間",
-    value: "gsx$時間"
-  },
-  data: {
-    name: "",
-    value: ["gsx$新北市總計", "gsx$臺北市總計", "gsx$高雄市總計"]
-  }
-};
-
 $(function() {
-  var $btn, chartList, chartType, checkform, dataRemote, dataset, errorMessage, errorStatus, firstStart, form, getJson, getJsonKey, getKey, getKeyBtn, getSpreadsheet, headerBanner, jsonDone, loadSheet, loadUserControl, renderChart, renderData, renderForm, resetForm, resetStatus, submitGetKey, updateUserControl, xAxis;
+  var $btn, chartList, chartType, checkform, dataRemote, dataset, errorMessage, errorStatus, firstStart, form, getJson, getJsonKey, getKey, getKeyBtn, getSpreadsheet, headerBanner, jsonDone, loadSheet, loadUserControl, pageValueInput, renderChart, renderData, renderForm, replaceGSX, resetForm, resetStatus, shKey, submitGetKey, updateUserControl, xAxis;
   getKeyBtn = $('#getKey');
   loadSheet = $('.load-sheet');
   submitGetKey = $('#submitGetKey');
@@ -62,6 +47,9 @@ $(function() {
     return $(errorMessage).removeClass('hidden');
   };
   firstStart = function() {
+    if ($btn.length > 0) {
+      $btn.button('reset');
+    }
     $(headerBanner).removeClass('index');
     $('.section-intro').removeClass('in active');
     return $('.section-chart').addClass('active').delay(30).queue(function() {
@@ -100,12 +88,10 @@ $(function() {
       var entry;
       entry = data.feed.entry;
       dataRemote.push(entry);
-      $btn.button('reset');
       firstStart();
       resetForm();
       return jsonDone(dataRemote);
     }).fail(function(jqxhr, textStatus, error) {
-      $btn.button('reset');
       firstStart();
       errorStatus();
       return console.log("GG,沒戲唱了");
@@ -153,7 +139,7 @@ $(function() {
       }
     });
     checkWrap.append('span').text(function(d) {
-      return d;
+      return replaceGSX(d);
     });
     if ($.isEmptyObject(userControl)) {
       return updateUserControl();
@@ -183,6 +169,7 @@ $(function() {
       name: '',
       value: userDatakey
     };
+    console.log(JSON.stringify(userControl));
     return renderData();
   };
   loadUserControl = function() {
@@ -230,7 +217,7 @@ $(function() {
     }
     return renderChart(dataset, x);
   };
-  return renderChart = function(dataset, x) {
+  renderChart = function(dataset, x) {
     var chart, chartCase;
     chartCase = userControl.chartType.value;
     return chart = c3.generate({
@@ -260,6 +247,15 @@ $(function() {
       }
     });
   };
+  replaceGSX = function(str) {
+    return str.replace('gsx$', '');
+  };
+  pageValueInput = $('#page-value');
+  if (pageValueInput.length > 0) {
+    shKey = pageValueInput.attr('value');
+    userControl = pageUserControl;
+    return getSpreadsheet(shKey);
+  }
 });
 
 
