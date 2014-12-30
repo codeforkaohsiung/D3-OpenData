@@ -277,6 +277,9 @@ $ ->
 				if $(@).val() is d
 					$(@).prop('checked', true)
 
+		chartSlider.slider('values', 0, userControl.range.min)
+		chartSlider.slider('values', 1, userControl.range.max)
+
 
 	renderData = () ->
 		dataset = []

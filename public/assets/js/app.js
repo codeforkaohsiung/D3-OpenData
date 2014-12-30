@@ -227,13 +227,15 @@ $(function() {
         return $(this).prop('selected', true);
       }
     });
-    return $.each(userControl.data.value, function(i, d) {
+    $.each(userControl.data.value, function(i, d) {
       return $.each($(checkform).find('input'), function(i2, d2) {
         if ($(this).val() === d) {
           return $(this).prop('checked', true);
         }
       });
     });
+    chartSlider.slider('values', 0, userControl.range.min);
+    return chartSlider.slider('values', 1, userControl.range.max);
   };
   renderData = function() {
     var dataTemp, dataVal, i, max, min, x, xVal;
