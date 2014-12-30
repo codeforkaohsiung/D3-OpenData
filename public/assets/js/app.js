@@ -3,11 +3,13 @@ var userControl;
 userControl = {};
 
 $(function() {
-  var $btn, chartList, chartSlider, chartType, checkform, dataRemote, dataset, errorMessage, errorStatus, firstStart, form, getJson, getJsonKey, getKey, getKeyBtn, getSpreadsheet, headerBanner, jsonDone, loadSheet, loadUserControl, pageValueInput, renderChart, renderData, renderForm, replaceGSX, resetForm, resetStatus, shKey, submitGetKey, uiSlider, updateUserControl, xAxis, xTemp;
+  var $btn, chartList, chartSlider, chartType, checkform, dataRemote, dataset, errorMessage, errorStatus, firstStart, form, getJson, getJsonKey, getKey, getKeyBtn, getSpreadsheet, headerBanner, jsonDone, loadSheet, loadUserControl, maximumCheck, minimumCheck, pageValueInput, renderChart, renderData, renderForm, replaceGSX, resetForm, resetStatus, shKey, submitGetKey, uiSlider, updateUserControl, xAxis, xTemp;
   getKeyBtn = $('#getKey');
   loadSheet = $('.load-sheet');
   submitGetKey = $('#submitGetKey');
   chartSlider = $('#chart-slider');
+  minimumCheck = $('#minimum');
+  maximumCheck = $('#maximum');
   form = '#form';
   xAxis = '#x-Axis';
   checkform = '#checkform';
@@ -162,7 +164,19 @@ $(function() {
         return xData.push(d[xVal].$t);
       });
       xDataMax = xData.length;
-      console.log(xData);
+      maximumCheck.val(xDataMax);
+      minimumCheck.on('change', function() {
+        if ($(this).prop('checked')) {
+          chartSlider.slider('values', 0, 0);
+          return $('#slider-min').text(xData[0]);
+        }
+      });
+      maximumCheck.on('change', function() {
+        if ($(this).prop('checked')) {
+          chartSlider.slider('values', 1, $(this).val());
+          return $('#slider-max').text(xData[xDataMax - 1]);
+        }
+      });
       slider = chartSlider.slider({
         range: true,
         min: 0,
@@ -171,8 +185,10 @@ $(function() {
         slide: function(event, ui) {
           max = ui.values[1];
           min = ui.values[0];
-          renderSliderValue(min, max);
+          max === xDataMax || maximumCheck.prop('checked', false);
+          min === 0 || minimumCheck.prop('checked', false);
           return setTimeout(function() {
+            renderSliderValue(min, max);
             userControl = {};
             return updateUserControl();
           }, 100);
@@ -180,6 +196,7 @@ $(function() {
       });
     }
     renderSliderValue = function(min, max) {
+      console.log(min, max);
       $('#slider-min').text(xData[min]);
       return $('#slider-max').text(xData[max]);
     };
@@ -211,12 +228,14 @@ $(function() {
     userControl.range = {
       name: $(xAxis).val(),
       min: chartSlider.slider('values', 0),
-      max: chartSlider.slider('values', 1)
+      max: chartSlider.slider('values', 1),
+      minimum: minimumCheck.prop('checked'),
+      maximum: maximumCheck.prop('checked')
     };
-    console.log(JSON.stringify(userControl));
     return renderData();
   };
   loadUserControl = function() {
+    var max;
     $.each($(chartList).find('option'), function(i, d) {
       if ($(this).text() === userControl.chartType.name) {
         return $(this).prop('selected', true);
@@ -234,8 +253,17 @@ $(function() {
         }
       });
     });
+    max = userControl.range.max;
     chartSlider.slider('values', 0, userControl.range.min);
-    return chartSlider.slider('values', 1, userControl.range.max);
+    chartSlider.slider('values', 1, userControl.range.max);
+    if (userControl.range.minimum) {
+      chartSlider.slider('values', 0, 0);
+      minimumCheck.prop('checked', true);
+    }
+    if (userControl.range.maximum) {
+      chartSlider.slider('values', 1, maximumCheck.val());
+      return maximumCheck.prop('checked', true);
+    }
   };
   renderData = function() {
     var dataTemp, dataVal, i, max, min, x, xVal;

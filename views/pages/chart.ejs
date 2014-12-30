@@ -37,8 +37,15 @@
 		</div>
 	</div>
 	<div class="col-sm-6 col-sm-offset-3 mtm">
-		<div class="mbs">資料區間</div>
-		<div id="chart-slider" class="mbs"></div>
+		<div class="mbs text-center">
+			<label class="pull-left"><input type="checkbox" id="minimum"> 最小值</label>
+			<span>資料區間</span>
+			<label class="pull-right"><input type="checkbox" id="maximum"> 最大值</label>
+		</div>
+		<div>
+			<div id="chart-slider" class="mbs"></div>
+		</div>
+		
 		<div class="row">
 			<div class="col-sm-6">Min: <span id="slider-min"></span></div>
 			<div class="col-sm-6 text-right">Max: <span id="slider-max"></span></div>

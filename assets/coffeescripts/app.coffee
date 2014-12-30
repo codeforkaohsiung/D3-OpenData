@@ -23,6 +23,8 @@ $ ->
 	loadSheet = $('.load-sheet')
 	submitGetKey = $('#submitGetKey')
 	chartSlider = $('#chart-slider')
+	minimumCheck = $('#minimum')
+	maximumCheck = $('#maximum')
 	form = '#form'
 	xAxis = '#x-Axis'
 	checkform = '#checkform'
@@ -198,7 +200,17 @@ $ ->
 				xData.push d[xVal].$t
 			xDataMax = xData.length
 
-			console.log xData
+			# max and min checkbox
+			maximumCheck.val(xDataMax)
+			minimumCheck.on 'change', ()->
+				if $(@).prop('checked')
+					chartSlider.slider('values', 0, 0)
+					$('#slider-min').text(xData[0])
+			maximumCheck.on 'change', ()->
+				if $(@).prop('checked')
+					chartSlider.slider('values', 1,$(@).val())
+					$('#slider-max').text(xData[xDataMax - 1])
+
 			# ui slider
 			slider = chartSlider.slider(
 				range: true,
@@ -208,15 +220,17 @@ $ ->
 				slide: (event, ui)->
 					max = ui.values[1]
 					min = ui.values[0]
-					renderSliderValue(min, max)
 					# 更新資料
+					max is xDataMax || maximumCheck.prop('checked',false)
+					min is 0 || minimumCheck.prop('checked',false)
 					setTimeout( ->
+						renderSliderValue(min, max)
 						userControl = {}
 						updateUserControl()
 					,100)
 				)		
-		
 		renderSliderValue = (min, max)->
+			console.log min, max
 			$('#slider-min').text(xData[min])
 			$('#slider-max').text(xData[max])
 
@@ -253,12 +267,14 @@ $ ->
 			name: $(xAxis).val()
 			min: chartSlider.slider('values', 0)
 			max: chartSlider.slider('values', 1)
+			minimum: minimumCheck.prop('checked')
+			maximum: maximumCheck.prop('checked')
 		
 
 		# uiSlider(userControl.xAxis.value)
 
 
-		console.log(JSON.stringify(userControl))
+		# console.log(JSON.stringify(userControl))
 		
 		renderData()
 
@@ -277,8 +293,15 @@ $ ->
 				if $(@).val() is d
 					$(@).prop('checked', true)
 
+		max = userControl.range.max
 		chartSlider.slider('values', 0, userControl.range.min)
 		chartSlider.slider('values', 1, userControl.range.max)
+		if userControl.range.minimum 
+			chartSlider.slider('values', 0, 0)
+			minimumCheck.prop('checked', true)
+		if userControl.range.maximum 
+			chartSlider.slider('values', 1, maximumCheck.val())
+			maximumCheck.prop('checked', true)
 
 
 	renderData = () ->
@@ -290,7 +313,7 @@ $ ->
 
 		min = userControl.range.min
 		max = userControl.range.max
-		#get checkbox data key
+		# get checkbox data key
 		# dataVal = userControl.data.value
 		
 		i = 0
