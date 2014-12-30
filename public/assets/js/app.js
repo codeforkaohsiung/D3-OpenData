@@ -21,19 +21,22 @@ $(function() {
   headerBanner = '.header-banner';
   chartType = [
     {
-      name: "長條",
+      name: "長條圖 Bar",
       key: "bar"
     }, {
-      name: "線條圖",
+      name: "折線圖 Line",
       key: "line"
     }, {
-      name: "面積圖",
+      name: "曲線圖 Spline",
+      key: "spline"
+    }, {
+      name: "面積圖 Area Spline",
       key: "area-spline"
     }, {
-      name: "圓餅圖",
+      name: "圓餅圖 Pie Chart",
       key: "pie"
     }, {
-      name: "圓環",
+      name: "圓環 Donut Chart",
       key: "donut"
     }
   ];
@@ -90,6 +93,7 @@ $(function() {
     return $.getJSON(url).done(function(data) {
       var entry;
       entry = data.feed.entry;
+      $('#chart-title').text(data.feed.title.$t);
       dataRemote.push(entry);
       firstStart();
       resetForm();
@@ -188,7 +192,7 @@ $(function() {
           max === xDataMax || maximumCheck.prop('checked', false);
           min === 0 || minimumCheck.prop('checked', false);
           return setTimeout(function() {
-            renderSliderValue(min, max);
+            renderSliderValue(min, max - 1);
             userControl = {};
             return updateUserControl();
           }, 100);

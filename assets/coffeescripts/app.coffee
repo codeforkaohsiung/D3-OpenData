@@ -36,26 +36,30 @@ $ ->
 	headerBanner = '.header-banner'
 	chartType = [
 		{
-			name: "長條"
+			name: "長條圖 Bar"
 			key: "bar"
 		}
 		{
-			name: "線條圖"
+			name: "折線圖 Line"
 			key: "line"
 		}
 		{
-			name: "面積圖"
+			name: "曲線圖 Spline"
+			key: "spline"
+		}
+		{
+			name: "面積圖 Area Spline"
 			key: "area-spline"
 		}
 		{
-			name: "圓餅圖"
+			name: "圓餅圖 Pie Chart"
 			key: "pie"
 		}
 		
 		{
-			name: "圓環"
+			name: "圓環 Donut Chart"
 			key: "donut"
-		}
+		}	
 	]
 
 
@@ -119,6 +123,7 @@ $ ->
 		$.getJSON(url)
 		.done((data) -> # Success
 			entry = data.feed.entry
+			$('#chart-title').text(data.feed.title.$t) #暫時放的
 			dataRemote.push entry
 			firstStart()
 			resetForm()
@@ -132,6 +137,7 @@ $ ->
 	jsonDone = (dataRemote)->
 		jsonKey = []
 		jsonKey = getJsonKey(dataRemote)
+
 		renderForm(dataRemote, jsonKey)
 		renderData(dataRemote, jsonKey)
 		# console.log jsonKey
@@ -224,7 +230,7 @@ $ ->
 					max is xDataMax || maximumCheck.prop('checked',false)
 					min is 0 || minimumCheck.prop('checked',false)
 					setTimeout( ->
-						renderSliderValue(min, max)
+						renderSliderValue(min, max - 1)
 						userControl = {}
 						updateUserControl()
 					,100)
