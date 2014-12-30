@@ -196,7 +196,6 @@ $(function() {
       });
     }
     renderSliderValue = function(min, max) {
-      console.log(min, max);
       $('#slider-min').text(xData[min]);
       return $('#slider-max').text(xData[max]);
     };
@@ -285,7 +284,7 @@ $(function() {
       }
       return $.each(dataVal, function(i2, d2) {
         if (i >= min && i <= max) {
-          return dataTemp[i2].push(d3.round(d[d2].$t));
+          return dataTemp[i2].push(d3.round(d[d2].$t, 2));
         }
       });
     });

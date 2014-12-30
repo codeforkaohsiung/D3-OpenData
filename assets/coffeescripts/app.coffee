@@ -230,7 +230,6 @@ $ ->
 					,100)
 				)		
 		renderSliderValue = (min, max)->
-			console.log min, max
 			$('#slider-min').text(xData[min])
 			$('#slider-max').text(xData[max])
 
@@ -328,7 +327,7 @@ $ ->
 				x.push d[xVal].$t
 			$.each dataVal, (i2, d2) ->
 				if (i >= min and i <= max)
-					dataTemp[i2].push d3.round(d[d2].$t)
+					dataTemp[i2].push d3.round(d[d2].$t, 2)
 
 		dataset.push x
 

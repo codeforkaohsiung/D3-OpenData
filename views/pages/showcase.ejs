@@ -2,7 +2,7 @@
   <li class="active"><a href="#">圖表牆</a></li>
 </ol>
 
-<div class="container-fluid">
+<div class="container-fluid container">
 	
 
 	<h2>圖表牆</h2>
@@ -16,7 +16,7 @@
 
 	<article class="row mbl mtm">
 		<% for(var i=0; i<12; i++) {%>
-		<div class="col-sm-3 mbm">
+		<div class="col-sm-4 mbm">
 			<img src="upload/test-img.png" alt="" class="img-responsive">
 			<h4 class="text-center text-overflow">
 				台灣人口統計分析圖 i jer jeroigj egjoer e
@@ -32,4 +32,23 @@
 		</div>
 		<% } %>
 	</article>
+	<nav class="text-center">
+		<ul class="pagination">
+			<li>
+				<a href="#" aria-label="Previous">
+					<span aria-hidden="true">&laquo;</span>
+				</a>
+			</li>
+			<li><a href="#">1</a></li>
+			<li><a href="#">2</a></li>
+			<li><a href="#">3</a></li>
+			<li><a href="#">4</a></li>
+			<li><a href="#">5</a></li>
+			<li>
+				<a href="#" aria-label="Next">
+					<span aria-hidden="true">&raquo;</span>
+				</a>
+			</li>
+		</ul>
+	</nav>
 </div>
