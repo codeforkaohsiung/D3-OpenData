@@ -25,6 +25,8 @@ $ ->
 	chartSlider = $('#chart-slider')
 	minimumCheck = $('#minimum')
 	maximumCheck = $('#maximum')
+	chartName = '#chartName'
+	chartDiscription = '#chartDiscription'
 	form = '#form'
 	xAxis = '#x-Axis'
 	checkform = '#checkform'
@@ -92,6 +94,7 @@ $ ->
 		$btn = $(this).button('loading')
 		resetStatus()
 		getKey(getKeyBtn)
+		
 	)
 
 	loadSheet.on 'click', ()->
@@ -367,7 +370,66 @@ $ ->
 			subchart:
 				show: true
 		)
- 
+	#分享FB
+	$('.jq-fb').on 'click',(e)->
+		e.preventDefault()
+		url = document.URL
+		window.open 'https://www.facebook.com/sharer/sharer.php?u=' + url, "_blank"
+ 	#儲存圖表
+	$('.jq-SaveData').on 'click', ()->
+		name = $(chartName).val();
+		img = $('#chartImg').attr('src');
+		description = $(chartDiscription).val();
+		googleId = $('#getKey').attr('value')
+		chartType_name =  $(chartList).find('option').filter(':selected').text()
+		chartType_value = $(chartList).val()
+		xAxis_name = $(xAxis).find('option').filter(':selected').text()
+		xAxis_value = $(xAxis).val()
+		data_name = ''
+		userDatakey = []
+		$.each $(checkform).find('input:checked'), ()->
+			userDatakey.push $(this).val()
+		data_value = userDatakey
+		range_name = $(xAxis).val()
+		range_min = chartSlider.slider('values', 0)
+		range_max = chartSlider.slider('values', 1)
+		range_minimum = minimumCheck.prop('checked')
+		range_maximum = maximumCheck.prop('checked')
+		# console.log googleId,
+		# '\n'+chartType_name,
+		# '\n'+name,
+		# '\n'+description,
+		# '\n'+xAxis_name,
+		# '\n'+xAxis_value,
+		# '\n'+data_name,
+		# '\n'+data_value,
+		# '\n'+range_name,
+		# '\n'+range_min,
+		# '\n'+range_max,
+		# '\n'+range_minimum,
+		# '\n'+range_maximum,
+		
+
+		jqxhr = $.post("/saveImage",  
+			'googleId':googleId
+			'name':name
+			'description':description
+			'img': img
+			'chartType_name': chartType_name
+			'chartType_value': chartType_value
+			'xAxis_name':xAxis_name
+			'xAxis_value':xAxis_value
+			'data_name':data_name
+			'data_value':data_value
+			'range_name':range_name
+			'range_min':range_min
+			'range_max':range_max
+			'range_minimum':range_minimum
+			'range_maximum':range_maximum
+			, (data)->
+				if data == 'success'
+					window.location.href = '/showcase'
+		)
 	# 取代文字
 	replaceGSX = (str)->
 		return str.replace('gsx$', '')
@@ -378,7 +440,79 @@ $ ->
 		shKey = pageValueInput.attr('value')
 		userControl = pageUserControl
 		getSpreadsheet(shKey)
+	$('#updateImg').on 'click', (e)->
+		e.preventDefault()
+		createChartImages()
+	#render img
+	styles = undefined
+	createChartImages = ->
+	  $("defs").remove()
+	  inlineAllStyles()
+	  canvas = $("#canvas").empty()[0]
+	  canvas.width = $(".demo").width() 
+	  canvas.height = $(".demo").height() 
+	  canvasContext = canvas.getContext("2d")
+	  svg = $.trim($(".demo > svg")[0].outerHTML)
+	  canvasContext.drawSvg svg, 0, 0
+	  $("#downloadImg").attr("href", canvas.toDataURL("png")).attr "download", ->
+	    "_llamacharts.png"
+	  $("#chartImg").attr('src',canvas.toDataURL("png"))
+	  return
+
+	inlineAllStyles = ->
+	  chartStyle = undefined
+	  selector = undefined
+	  
+	  # Get rules from c3.css
+	  i = 0
+
+	  while i <= document.styleSheets.length - 1
+	    if document.styleSheets[i].href and document.styleSheets[i].href.indexOf("c3.css") isnt -1
+	      if document.styleSheets[i].rules isnt `undefined`
+	        chartStyle = document.styleSheets[i].rules
+	      else
+	        chartStyle = document.styleSheets[i].cssRules
+	    i++
+	  if chartStyle isnt null and chartStyle isnt `undefined`
+	    
+	    # SVG doesn't use CSS visibility and opacity is an attribute, not a style property. Change hidden stuff to "display: none"
+	    changeToDisplay = ->
+	      $(this).css "display", "none"  if $(this).css("visibility") is "hidden" or $(this).css("opacity") is "0"
+	      return
+
+	    
+	    # Inline apply all the CSS rules as inline
+	    i = 0
+	    while i < chartStyle.length
+	      if chartStyle[i].type is 1
+	        selector = chartStyle[i].selectorText
+	        styles = makeStyleObject(chartStyle[i])
+	        $("svg *").each changeToDisplay
+	        
+	        # $(selector).hide();
+	        $(selector).not($(".c3-chart path")).css styles
+	      $(".c3-chart path").filter(->
+	        $(this).css("fill") is "none"
+	      ).attr "fill", "none"
+	      $(".c3-chart path").filter(->
+	        not $(this).css("fill") is "none"
+	      ).attr "fill", ->
+	        $(this).css "fill"
+
+	      i++
+	  return
 
 
+	# Create an object containing all the CSS styles.
+	# TODO move into inlineAllStyles
+	makeStyleObject = (rule) ->
+	  styleDec = rule.style
+	  output = {}
+	  s = undefined
+	  s = 0
+	  while s < styleDec.length
+	    output[styleDec[s]] = styleDec[styleDec[s]]
+	    s++
+	  output	
 
 	
