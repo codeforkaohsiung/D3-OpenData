@@ -3,13 +3,15 @@ var userControl;
 userControl = {};
 
 $(function() {
-  var $btn, chartList, chartSlider, chartType, checkform, dataRemote, dataset, errorMessage, errorStatus, firstStart, form, getJson, getJsonKey, getKey, getKeyBtn, getSpreadsheet, headerBanner, jsonDone, loadSheet, loadUserControl, maximumCheck, minimumCheck, pageValueInput, renderChart, renderData, renderForm, replaceGSX, resetForm, resetStatus, shKey, submitGetKey, uiSlider, updateUserControl, xAxis, xTemp;
+  var $btn, chartDiscription, chartList, chartName, chartSlider, chartType, checkform, createChartImages, dataRemote, dataset, errorMessage, errorStatus, firstStart, form, getJson, getJsonKey, getKey, getKeyBtn, getSpreadsheet, headerBanner, inlineAllStyles, jsonDone, loadSheet, loadUserControl, makeStyleObject, maximumCheck, minimumCheck, pageValueInput, renderChart, renderData, renderForm, replaceGSX, resetForm, resetStatus, shKey, styles, submitGetKey, uiSlider, updateUserControl, xAxis, xTemp;
   getKeyBtn = $('#getKey');
   loadSheet = $('.load-sheet');
   submitGetKey = $('#submitGetKey');
   chartSlider = $('#chart-slider');
   minimumCheck = $('#minimum');
   maximumCheck = $('#maximum');
+  chartName = '#chartName';
+  chartDiscription = '#chartDiscription';
   form = '#form';
   xAxis = '#x-Axis';
   checkform = '#checkform';
@@ -330,6 +332,55 @@ $(function() {
       }
     });
   };
+  $('.jq-fb').on('click', function(e) {
+    var url;
+    e.preventDefault();
+    url = document.URL;
+    return window.open('https://www.facebook.com/sharer/sharer.php?u=' + url, "_blank");
+  });
+  $('.jq-SaveData').on('click', function() {
+    var chartType_name, chartType_value, data_name, data_value, description, googleId, img, jqxhr, name, range_max, range_maximum, range_min, range_minimum, range_name, userDatakey, xAxis_name, xAxis_value;
+    name = $(chartName).val();
+    img = $('#chartImg').attr('src');
+    description = $(chartDiscription).val();
+    googleId = $('#getKey').attr('value');
+    chartType_name = $(chartList).find('option').filter(':selected').text();
+    chartType_value = $(chartList).val();
+    xAxis_name = $(xAxis).find('option').filter(':selected').text();
+    xAxis_value = $(xAxis).val();
+    data_name = '';
+    userDatakey = [];
+    $.each($(checkform).find('input:checked'), function() {
+      return userDatakey.push($(this).val());
+    });
+    data_value = userDatakey;
+    range_name = $(xAxis).val();
+    range_min = chartSlider.slider('values', 0);
+    range_max = chartSlider.slider('values', 1);
+    range_minimum = minimumCheck.prop('checked');
+    range_maximum = maximumCheck.prop('checked');
+    return jqxhr = $.post("/saveImage", {
+      'googleId': googleId,
+      'name': name,
+      'description': description,
+      'img': img,
+      'chartType_name': chartType_name,
+      'chartType_value': chartType_value,
+      'xAxis_name': xAxis_name,
+      'xAxis_value': xAxis_value,
+      'data_name': data_name,
+      'data_value': data_value,
+      'range_name': range_name,
+      'range_min': range_min,
+      'range_max': range_max,
+      'range_minimum': range_minimum,
+      'range_maximum': range_maximum
+    }, function(data) {
+      if (data === 'success') {
+        return window.location.href = '/showcase';
+      }
+    });
+  });
   replaceGSX = function(str) {
     return str.replace('gsx$', '');
   };
@@ -337,8 +388,81 @@ $(function() {
   if (pageValueInput.length > 0) {
     shKey = pageValueInput.attr('value');
     userControl = pageUserControl;
-    return getSpreadsheet(shKey);
+    getSpreadsheet(shKey);
   }
+  $('#updateImg').on('click', function(e) {
+    e.preventDefault();
+    return createChartImages();
+  });
+  styles = void 0;
+  createChartImages = function() {
+    var canvas, canvasContext, svg;
+    $("defs").remove();
+    inlineAllStyles();
+    canvas = $("#canvas").empty()[0];
+    canvas.width = $(".demo").width();
+    canvas.height = $(".demo").height();
+    canvasContext = canvas.getContext("2d");
+    svg = $.trim($(".demo > svg")[0].outerHTML);
+    canvasContext.drawSvg(svg, 0, 0);
+    $("#downloadImg").attr("href", canvas.toDataURL("png")).attr("download", function() {
+      return "_llamacharts.png";
+    });
+    $("#chartImg").attr('src', canvas.toDataURL("png"));
+  };
+  inlineAllStyles = function() {
+    var changeToDisplay, chartStyle, i, selector;
+    chartStyle = void 0;
+    selector = void 0;
+    i = 0;
+    while (i <= document.styleSheets.length - 1) {
+      if (document.styleSheets[i].href && document.styleSheets[i].href.indexOf("c3.css") !== -1) {
+        if (document.styleSheets[i].rules !== undefined) {
+          chartStyle = document.styleSheets[i].rules;
+        } else {
+          chartStyle = document.styleSheets[i].cssRules;
+        }
+      }
+      i++;
+    }
+    if (chartStyle !== null && chartStyle !== undefined) {
+      changeToDisplay = function() {
+        if ($(this).css("visibility") === "hidden" || $(this).css("opacity") === "0") {
+          $(this).css("display", "none");
+        }
+      };
+      i = 0;
+      while (i < chartStyle.length) {
+        if (chartStyle[i].type === 1) {
+          selector = chartStyle[i].selectorText;
+          styles = makeStyleObject(chartStyle[i]);
+          $("svg *").each(changeToDisplay);
+          $(selector).not($(".c3-chart path")).css(styles);
+        }
+        $(".c3-chart path").filter(function() {
+          return $(this).css("fill") === "none";
+        }).attr("fill", "none");
+        $(".c3-chart path").filter(function() {
+          return !$(this).css("fill") === "none";
+        }).attr("fill", function() {
+          return $(this).css("fill");
+        });
+        i++;
+      }
+    }
+  };
+  return makeStyleObject = function(rule) {
+    var output, s, styleDec;
+    styleDec = rule.style;
+    output = {};
+    s = void 0;
+    s = 0;
+    while (s < styleDec.length) {
+      output[styleDec[s]] = styleDec[styleDec[s]];
+      s++;
+    }
+    return output;
+  };
 });
 
 
