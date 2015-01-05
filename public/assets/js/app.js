@@ -86,7 +86,6 @@ $(function() {
     shPath = 'https://spreadsheets.google.com/feeds/list/';
     shCallback = '/public/values?alt=json-in-script&callback=?';
     listKey = 'od6';
-    console.log(shKey);
     url = shPath + shKey + '/' + listKey + shCallback;
     return getJson(url);
   };
@@ -344,7 +343,7 @@ $(function() {
     name = $(chartName).val();
     img = $('#chartImg').attr('src');
     description = $(chartDiscription).val();
-    googleId = $('#getKey').attr('value');
+    googleId = $('#getKey').val();
     chartType_name = $(chartList).find('option').filter(':selected').text();
     chartType_value = $(chartList).val();
     xAxis_name = $(xAxis).find('option').filter(':selected').text();
