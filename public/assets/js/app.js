@@ -86,6 +86,7 @@ $(function() {
     shPath = 'https://spreadsheets.google.com/feeds/list/';
     shCallback = '/public/values?alt=json-in-script&callback=?';
     listKey = 'od6';
+    console.log(shKey);
     url = shPath + shKey + '/' + listKey + shCallback;
     return getJson(url);
   };

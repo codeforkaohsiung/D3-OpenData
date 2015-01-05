@@ -6,7 +6,6 @@
 <div class="container-fluid container">
 	<h2>範例圖表</h2>
 
-	<input id="page-value" type="text" class="hidden" value="1x6C86tzJ2F8ZTau6g7uUNxSb496wuoIR2s2I9lEWQSI">
 	<div class="section-chart index-section">
 		<% include chart %>
     <!-- chart save -->
@@ -27,7 +26,7 @@
           </div>
           <div class="form-group">
             <label for="chartKey">Google 試算表 Key </label>
-            <input type="text" class="form-control" value="<%= C3data[0].googleId %>" id="chartKey" disabled="">
+            <input id="page-value" type="text" class="form-control" value="<%= C3data[0].googleId %>" id="chartKey" disabled="">
           </div>
           <div class="form-group">
             <label for="chartDiscription">描述</label>
