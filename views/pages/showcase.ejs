@@ -5,30 +5,30 @@
 
 <div class="container-fluid container">
 	
-
 	<h2>圖表牆</h2>
 
-	
 	<div class="section-chart index-section">
 		<% include chart %>
 	</div>
 
-
-	
 	<article class="row mbl mtm">
 		<% for(var i=0; i<C3data.length; i++) {%> 
 		<div class="col-sm-4 mbm">
-			<a >
-				<img src="<%= C3data[i].img %>" alt="" class="img-responsive">
-			</a>
-			<h4 class="text-center text-overflow">
-				<%= C3data[i].name %>
-			</h4>
-			<div class="overflow-y h80 c-gray mbs">
-				<%= C3data[i].description %>
-			</div>
-			<div class="text-center">
-				<a href="/page/<%= C3data[i].id %>" class="btn btn-primary btn-sm load-sheet">檢視</a>
+			<div class="showcase-card">
+				<div class="showcase-img" style="background-image: url(<%= C3data[i].img %>)"></div>
+				<div class="showcase-content">
+					<h4 class="text-center text-overflow">
+						<%= C3data[i].name %>
+					</h4>
+					<div class="overflow-y h80 c-gray mbs">
+						<%= C3data[i].description %>
+					</div>
+				</div>
+				<div class="showcase-footer">
+					<div class="text-center">
+						<a href="/page/<%= C3data[i].id %>" class="btn btn-primary btn-sm">檢視</a>
+					</div>
+				</div>
 			</div>
 		</div>
 		<% } %>

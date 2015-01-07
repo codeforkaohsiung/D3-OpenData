@@ -3,9 +3,8 @@ var userControl;
 userControl = {};
 
 $(function() {
-  var $btn, chartDiscription, chartList, chartName, chartSlider, chartType, checkform, createChartImages, dataRemote, dataset, errorMessage, errorStatus, firstStart, form, getJson, getJsonKey, getKey, getKeyBtn, getSpreadsheet, headerBanner, inlineAllStyles, jsonDone, loadSheet, loadUserControl, makeStyleObject, maximumCheck, minimumCheck, pageValueInput, renderChart, renderData, renderForm, replaceGSX, resetForm, resetStatus, shKey, styles, submitGetKey, uiSlider, updateUserControl, xAxis, xTemp;
+  var $btn, chartDiscription, chartList, chartName, chartSlider, chartType, checkform, createChartImages, dataRemote, dataset, errorMessage, errorStatus, firstStart, form, getJson, getJsonKey, getKey, getKeyBtn, getSpreadsheet, headerBanner, inlineAllStyles, jsonDone, loadUserControl, makeStyleObject, maximumCheck, minimumCheck, pageValueInput, renderChart, renderData, renderForm, replaceGSX, resetForm, resetStatus, shKey, styles, submitGetKey, uiSlider, updateUserControl, xAxis, xTemp;
   getKeyBtn = $('#getKey');
-  loadSheet = $('.load-sheet');
   submitGetKey = $('#submitGetKey');
   chartSlider = $('#chart-slider');
   minimumCheck = $('#minimum');
@@ -68,13 +67,6 @@ $(function() {
     $btn = $(this).button('loading');
     resetStatus();
     return getKey(getKeyBtn);
-  });
-  loadSheet.on('click', function() {
-    var shKey;
-    $btn = $(this).button('loading');
-    resetStatus();
-    shKey = $(this).attr('data-key');
-    return getSpreadsheet(shKey);
   });
   getKey = function(input) {
     var shKey;

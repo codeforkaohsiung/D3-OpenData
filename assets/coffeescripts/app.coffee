@@ -20,7 +20,7 @@ userControl = {}
 $ ->
 	# get shKey
 	getKeyBtn = $('#getKey')
-	loadSheet = $('.load-sheet')
+	# loadSheet = $('.load-sheet')
 	submitGetKey = $('#submitGetKey')
 	chartSlider = $('#chart-slider')
 	minimumCheck = $('#minimum')
@@ -97,11 +97,11 @@ $ ->
 		
 	)
 
-	loadSheet.on 'click', ()->
-		$btn = $(this).button('loading')
-		resetStatus()
-		shKey = $(@).attr 'data-key'
-		getSpreadsheet(shKey)
+	# loadSheet.on 'click', ()->
+	# 	$btn = $(this).button('loading')
+	# 	resetStatus()
+	# 	shKey = $(@).attr 'data-key'
+	# 	getSpreadsheet(shKey)
 
 	getKey = (input)->
 		shKey = input.val()

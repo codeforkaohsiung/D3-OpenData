@@ -51,7 +51,7 @@ html { font-size: 100%; line-height: 1.5em; }
 
 .pdm { padding: 15px; }
 
-.overflow-y { overflow-y: auto; }
+.overflow-y { overflow-y: auto; word-break: break-all; }
 
 .text-overflow { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
@@ -69,6 +69,9 @@ html { font-size: 100%; line-height: 1.5em; }
 .mega-dropdown > ul > li > label { display: block; padding: 3px 20px; clear: both; font-weight: normal; line-height: 1.42857; color: #333333; white-space: nowrap; }
 .mega-dropdown > ul > li > label input[type="checkbox"] { margin-right: 4px; }
 .mega-dropdown.dropdown-menu-right .dropdown-menu { right: 0; left: auto; }
+
+.showcase-card { background-color: #FFF; box-shadow: 0 3px 3px rgba(0, 0, 0, 0.16); padding: 15px 10px; border: 1px solid #eaeaea; border-radius: 2px; }
+.showcase-card .showcase-img { height: 125px; background-repeat: no-repeat no-repeat; background-position: center center; -moz-background-size: contain; -o-background-size: contain; -webkit-background-size: contain; background-size: contain; border-bottom: 1px solid #eaeaea; }
 
 .header-banner { height: 120px; position: relative; width: 100%; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; margin-bottom: 2.25em; -moz-transition: height 0.5s; -o-transition: height 0.5s; -webkit-transition: height 0.5s; transition: height 0.5s; }
 .header-banner.index { height: 240px; }
