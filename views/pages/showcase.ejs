@@ -21,7 +21,7 @@
 						<%= C3data[i].name %>
 					</h4>
 					<div class="overflow-y h80 c-gray mbs">
-						<%= C3data[i].description %>
+						<%- C3data[i].description.replace("\n", "<br />", "g") %>
 					</div>
 				</div>
 				<div class="showcase-footer">

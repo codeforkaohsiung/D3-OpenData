@@ -11,7 +11,11 @@ exports.add = function(req, res) {
     res.render('pages/add');
 };
 exports.doc = function(req, res) {
-    res.render('pages/doc');
+    res.render('pages/doc',{
+        ogheadTitle: '使用教學',
+        ogdescription: '',
+        ogImage: ''
+    });
 };
 exports.showcase = function(req, res) {
     C3data.find(function(err, C3data, count) {

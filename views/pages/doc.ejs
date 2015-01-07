@@ -1,1 +1,92 @@
-<div class="doc">doc</div>
+<% layout( '../layout' ) -%> 
+
+<ol class="breadcrumb">
+  <li class="active"><a href="#">使用教學</a></li>
+</ol>
+
+<div class="container-fluid container">
+	<div class="col-sm-3">
+		<ul class="nav nav-pills nav-stacked">
+			<li><a href="#intro">快速介紹</a></li>
+			<li><a href="#tips">Google Chart 操作小技巧</a></li>
+		</ul>
+	</div>
+	<div class="col-sm-9">
+		<h1>使用教學</h1>
+		<h2 id="intro">快速介紹</h2>
+		<p>如果說聽到關於生育率與老化的問題時，如果需要證明這問題確實存在，最有效的辦法就是製作圖表，而目前政府有提供許多資料可以，只要找到資料，再透過OpenChart就可以輕鬆的將圖表的資訊傳達給大眾知道。</p>
+		<img src="/images/tutorial/tutorial_intro_01.png" class="img-responsive mbl" alt="">
+
+		<p><a href="http://statis.moi.gov.tw/micst/stmain.jsp?sys=100"></a>http://statis.moi.gov.tw/micst/stmain.jsp?sys=100</p>
+
+		<p>內政部所提供的資料中，也有包含人口結構的統計資料，再透過系統所提供的過濾工具，可以選擇我們想瞭解的部分，這裏就選擇台北、新北、高雄的人口資料吧。</p>
+
+		<p>接下來，將找到資料匯入Google Drive的試算表內，對於熟悉Excel的您，應該是相當容易上手的，如果有任何問題，也可以參考試算表<a href="#tips">小技巧</a>。</p>	
+		<img src="/images/tutorial/tutorial_intro_02.png" class="img-responsive mbl" alt="">
+		<p>接下來選擇左上方的<strong>檔案 > 發佈到網路</strong>，隨後直接選擇發佈，這樣資料就會釋放出來讓OpenChart可以抓取。</p>
+
+		<img src="/images/tutorial/tutorial_intro_03.png" class="img-responsive mbl" alt="">
+
+		<p>再發佈後，可以在以下畫面找到這份試算表的Key，這個Key是OpenChart連接到這裏的路徑，請務必拷貝下來。</p>
+
+		<img src="/images/tutorial/tutorial_intro_04.png" class="img-responsive mbl" alt="">
+
+		<p>接下來，回到本站首頁，將剛剛的Key貼入首頁的表單內，選擇開啟試算表，就可以將資料從Google那拉拉拉過來～。</p>
+
+		<img src="/images/tutorial/tutorial_intro_05.png" class="img-responsive mbl" alt="">
+
+		<p>匯入後，打開右方的資料，試試看選擇一些資料，相信圖片就會出現的，如果滿意這圖的結果，分享它吧，和大家一起閱讀這份資料。</p>
+
+		<img src="/images/tutorial/tutorial_intro_06.png" class="img-responsive mbl" alt="">
+
+		<p>如果在操作上有任何問題，或者遇到一些Bug，都歡迎來我們的Github上留言，感謝大家個回饋。</p>
+
+		<hr>
+
+		<h2 id="tips">Google Chart 操作小技巧</h2>
+		<h3>表頭</h3>
+		<p>表頭的部分，是我們作為資料索引的關鍵，所以在第一列輸入固定的文字作為索引(請避免重複的標頭以及多餘的符號)。</p>
+
+		<img src="/images/tutorial/tutorial_tips_01.png" class="img-responsive mbl" alt="">
+
+		<h3>注意資料的格式</h3>
+
+		<p>除了X軸，在資料的格式上建議使用一般數字，或者是帶有小數點的數值，可以避免在讀入時造成格式錯誤，無法達到預期的效果。</p>
+
+		<img src="/images/tutorial/tutorial_tips_02.png" class="img-responsive mbl" alt="">
+
+		<h3>頁籤</h3>
+
+		<p>目前我們僅支援讀取第一個頁籤，而第一個頁籤也可以作為表單名稱的設定。</p>
+
+		<img src="/images/tutorial/tutorial_tips_03.png" class="img-responsive mbl" alt="">
+
+		<h3>X軸排序</h3>
+
+		<p>在X軸或時間的排序上，建議從過去排到現在，這樣在圖表的呈現上會更容易地閱讀。</p>
+
+		<img src="/images/tutorial/tutorial_tips_04.png" class="img-responsive mbl" alt="">
+
+		<h3>和他人共用圖表</h3>
+
+		<p>雖然OpenChart就算不開共用，也可以讀取到資料，但是如果想要和朋友一起編輯Google試算表也是可以的，在試算表的右上方有個`共用`，點開後可以選擇與他人共用並且設定相關的權限。</p>
+
+		<p><em>但是注意，如果開放讓他人修改，必須自行承擔被修改的風險及相關問題。</em></p>
+
+		<img src="/images/tutorial/tutorial_tips_05.png" class="img-responsive mbl" alt="">
+
+		<h3>保護範圍</h3>
+
+		<p>在與他人共用後，也可以設定保護範圍，讓其他使用者避免修改到重要的內容，例如表頭。</p>
+
+		<p>選取表格後，按下右鍵就會出現保護範圍的選項，接下來就可以修改保護範圍的權限。</p>
+
+
+
+		<img src="/images/tutorial/tutorial_tips_06.png" class="img-responsive mbl" alt="">
+
+		<img src="/images/tutorial/tutorial_tips_07.png" class="img-responsive mbl" alt="">
+
+		
+	</div>
+</div>
