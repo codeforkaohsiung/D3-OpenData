@@ -2,6 +2,7 @@
 <div id="errorMessage" class="hidden alert alert-danger">
 	很抱歉，連接不上Google 試算表，可能是運氣不好，或者參考一下文件看看發生了什麼問題。
 </div>
+
 <div id="form" class="row mbm">
 
 	<div class="col-sm-3">
@@ -9,7 +10,7 @@
 			圖表類型 <small class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="首先選擇你的圖表格式"></small>
 		</label>
 		<select id="chart-list" class="form-control">
-
+			<option ng-repeat="operator in chartType" title="{{operator.title}}" value="{{operator.key}}">{{operator.name}}</option>
 		</select>
 	</div>
 
@@ -18,7 +19,10 @@
 			X 軸
 			<small class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="選擇X軸，預設是表單的第一欄"></small>
 		</label>
-		<select name="" id="x-Axis" class="form-control"></select>
+		<select name="" id="x-Axis" class="form-control" ng-init="appModel.xVal = appModel.jsonKey[0]" ng-model="appModel.xVal" ng-options="option for option in appModel.jsonKey">
+			 <!-- ng-model="somethingHere" ng-options="option.name for option in options" -->
+			<!-- <option ng-repeat="operator in appModel.jsonKey" value="{{operator}}">{{operator}}</option> -->
+		</select>
 	</div>
 
 	<div class="col-sm-3 col-sm-offset-3 text-primary">
@@ -26,13 +30,18 @@
 			資料
 			<small class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="選擇所需要的資料"></small>
 		</label>
-		<div class="dropdown mega-dropdown dropdown-menu-right">
-			<a type="button" class="btn btn-default block">
+		<div class="dropdown mega-dropdown dropdown-menu-right" dropdown on-toggle="toggled(open)">
+			<a type="button" class="btn btn-default block" dropdown-toggle>
 			  <span class="text-primary">選擇資料</span>
 			  <span class="caret text-primary"></span>
 			</a>
-			<ul id="checkform" class="dropdown-menu" >
-
+			<ul id="checkform" class="dropdown-menu" ng-click="$event.stopPropagation()">
+				<li ng-repeat="item in appModel.jsonKey">
+					<label>
+						<input type="checkbox" value="{{item}}">
+							{{ replaceGSX(item) }}
+					</label>
+				</li>	
 			</ul>
 		</div>
 	</div>
@@ -43,12 +52,12 @@
 			<label class="pull-right"><input type="checkbox" id="maximum"> 最大值</label>
 		</div>
 		<div>
-			<div id="chart-slider" class="mbs"></div>
+			<slider floor="0" ceiling="{{ appModel.xData.length }}"  ng-model-low="appModel.xDataMin" ng-model-high="appModel.xDataMax"></slider>
 		</div>
 		
 		<div class="row">
-			<div class="col-sm-6">Min: <span id="slider-min"></span></div>
-			<div class="col-sm-6 text-right">Max: <span id="slider-max"></span></div>
+			<div class="col-sm-6">Min: {{ appModel.xData[appModel.xDataMin] }}</div>
+			<div class="col-sm-6 text-right">Max: {{ appModel.xData[(appModel.xDataMax - 1)] }}</div>
 		</div>
 	</div>	
 </div>

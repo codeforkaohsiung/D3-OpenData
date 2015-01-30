@@ -94,7 +94,6 @@ $ ->
 		$btn = $(this).button('loading')
 		resetStatus()
 		getKey(getKeyBtn)
-		
 	)
 
 	# loadSheet.on 'click', ()->

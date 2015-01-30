@@ -15,6 +15,16 @@ gulp.task('coffee', function() { //‘coffee'是排程名稱，可自定
 		.pipe(gulp.dest('./public/assets/js')) //輸出位置
 });
 
+gulp.task('ng-coffee', function() { //‘coffee'是排程名稱，可自定
+  gulp.src('./assets/ng-coffee/*.coffee') //來源檔案
+    .pipe(plumber())
+    .pipe(coffee({bare: true})) //編譯
+    .pipe(concat('ng-app.js')) //合併成一隻
+    //.pipe(uglify()) //壓縮、醜化
+
+    .pipe(gulp.dest('./public/assets/js')) //輸出位置
+});
+
 gulp.task('compass', function() {
   gulp.src('./assets/sass/**/*.sass') //來源路徑
   .pipe(plumber())
@@ -31,8 +41,9 @@ gulp.task('compass', function() {
 
 gulp.task('watch', function () { //自定一個watch的排程名稱
   gulp.watch('./assets/coffeescripts/*.coffee', ['coffee']); //監聽路徑，以及檔案變更後所執行的任務
+  gulp.watch('./assets/ng-coffee/*.coffee', ['ng-coffee']); 
   gulp.watch('./assets/sass/**/**/*.sass', ['compass']);
 });
 
-gulp.task('default', ['coffee','compass','watch']);
+gulp.task('default', ['coffee', 'ng-coffee','compass','watch']);
 

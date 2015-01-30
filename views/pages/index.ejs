@@ -4,20 +4,22 @@
 	<div class="col-sm-6 col-sm-offset-3">
 
 		<div class="input-group">
-			<input id="getKey" type="text" value="" placeholder="Pleace type the Google Spreadsheet key" class="form-control">
+			<input id="getKey" type="text" ng-model="appModel.chartShkey" placeholder="Pleace type the Google Spreadsheet key" class="form-control">
 			<span class="input-group-btn">
-				<button id="submitGetKey" class="btn btn-danger" type="button" data-loading-text="Loading...">開啟試算表</button>
+				<button id="submitGetKey" class="btn btn-danger" type="button" data-loading-text="Loading..." ng-click="loadChart()">開啟試算表</button>
 			</span>
 		</div>
 	</div>
 </div>
 
 <div class="container-fluid container">
-	<div class="section-intro index-section in active">
+	<div class="section-intro index-section">
 		<% include intro %>
 	</div>
-
-	<div class="section-chart index-section">
+	<pre>
+		{{ appModel | json}}
+		</pre>
+	<div class="section-chart index-section in active">
 		<% include chart %>
 		<!-- chart save -->
 		<div class="row mbl">
