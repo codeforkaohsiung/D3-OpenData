@@ -16,7 +16,7 @@ gulp.task('coffee', function() { //‘coffee'是排程名稱，可自定
 });
 
 gulp.task('ng-coffee', function() { //‘coffee'是排程名稱，可自定
-  gulp.src('./assets/ng-coffee/*.coffee') //來源檔案
+  gulp.src('./assets/ng-coffee/app.coffee') //來源檔案
     .pipe(plumber())
     .pipe(coffee({bare: true})) //編譯
     .pipe(concat('ng-app.js')) //合併成一隻

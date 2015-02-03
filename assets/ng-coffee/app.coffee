@@ -1,4 +1,4 @@
-app = angular.module('starter', ['ui.bootstrap', 'uiSlider']);
+app = angular.module('starter', ['ui.bootstrap', 'vr.directives.slider']);
 
 
 
@@ -11,8 +11,16 @@ app.controller('appCtrl', ($scope, $http)->
 	$scope.replaceGSX = (str)->
 		return str.replace('gsx$', '')
 	$scope.renderData = (name)->
+		console.log 'aa'
+		renderData()
+	$scope.$watchCollection $scope.appModel, ()->
+		console.log $scope.appModel
 		renderData()
 
+	$scope.$watch($scope.appModel, (newValue, oldValue)-> 
+		if newValue
+			console.log "I see a data change!"
+	, true);
 	# Chart 的類型定義
 	$scope.chartType = chartType
 
