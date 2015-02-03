@@ -327,15 +327,17 @@ var app, chartType;
 app = angular.module('starter', ['ui.bootstrap', 'uiSlider']);
 
 app.controller('appCtrl', function($scope, $http) {
-  var dataRemote, getGoogleChart, getJsonKey, renderForm, sliderData, xTemp;
+  var getGoogleChart, getJsonKey, renderChart, renderData, renderForm, sliderData, xTemp;
   $scope.appModel = {};
   $scope.appModel.chartShkey = '1x6C86tzJ2F8ZTau6g7uUNxSb496wuoIR2s2I9lEWQSI';
-  dataRemote = [];
   $scope.loadChart = function(path) {
     return getGoogleChart($scope.appModel.chartShkey);
   };
   $scope.replaceGSX = function(str) {
     return str.replace('gsx$', '');
+  };
+  $scope.renderData = function(name) {
+    return renderData();
   };
   $scope.chartType = chartType;
   getGoogleChart = function(shkey) {
@@ -348,11 +350,12 @@ app.controller('appCtrl', function($scope, $http) {
       'url': url,
       'method': "GET"
     }).then(function(data) {
-      dataRemote = data.data.feed.entry;
-      console.log(data, dataRemote);
-      $scope.appModel.jsonKey = getJsonKey(dataRemote);
-      $scope.appModel.xVal = $scope.appModel.jsonKey[0];
-      return renderForm(dataRemote);
+      console.log(data.data.feed);
+      $scope.dataRemote = data.data.feed.entry;
+      console.log(data, $scope.dataRemote);
+      $scope.appModel.jsonKey = getJsonKey($scope.dataRemote);
+      $scope.appModel.xVal = $scope.appModel.jsonKey[0].name;
+      return renderForm();
     }, function(response) {
       return console.log('Fail:', response);
     });
@@ -368,33 +371,102 @@ app.controller('appCtrl', function($scope, $http) {
     i = 0;
     while (i < orgKey.length) {
       if (orgKey[i].indexOf(prefix) > -1) {
-        jsonKey.push(orgKey[i]);
+        jsonKey.push({
+          "name": orgKey[i]
+        });
       }
       i++;
     }
     return jsonKey;
   };
-  renderForm = function(dataRemote) {
+  renderForm = function() {
     return sliderData();
   };
   xTemp = '';
-  return sliderData = function() {
-    var max, min, xData;
+  sliderData = function() {
+    var min, xData;
     xData = [];
     if (xTemp !== $scope.appModel.xVal && $scope.appModel.xVal !== '') {
       xTemp = $scope.appModel.xVal;
     } else if (xTemp !== $scope.appModel.xVal && $scope.appModel.xVal === '') {
-      $scope.appModel.xVal = $scope.appModel.jsonKey[0];
+      $scope.appModel.xVal = $scope.appModel.jsonKey[0].name;
       xTemp = $scope.appModel.xVal;
     }
-    console.log(dataRemote);
-    max = 0;
     min = 0;
-    angular.forEach(dataRemote, function(d, i) {
+    console.log(xTemp);
+    angular.forEach($scope.dataRemote, function(d, i) {
       return xData.push(d[xTemp].$t);
     });
     $scope.appModel.xData = xData;
-    return $scope.appModel.xDataMax = $scope.appModel.xData.length;
+    $scope.appModel.xDataMin = min;
+    $scope.appModel.xDataMax = $scope.appModel.xData.length;
+    return renderData();
+  };
+  renderData = function() {
+    var dataTemp, dataVal, dataset, i, i2, k, max, min, x, xVal;
+    dataset = [];
+    x = ["x"];
+    xVal = $scope.appModel.xVal;
+    dataVal = [];
+    dataTemp = [];
+    angular.forEach($scope.appModel.jsonKey, function(d, i) {
+      if (d.dataSelect === true) {
+        return dataVal.push(d.name);
+      }
+    });
+    k = 0;
+    while (k < dataVal.length) {
+      dataTemp.push([dataVal[k]]);
+      k++;
+    }
+    max = parseInt($scope.appModel.xDataMax, 10);
+    min = parseInt($scope.appModel.xDataMin, 10);
+    i2 = 0;
+    angular.forEach($scope.dataRemote, function(d, i) {
+      if (i >= min && i < max) {
+        x.push($scope.dataRemote[i][xVal].$t);
+        return angular.forEach(dataVal, function(d2, i2) {
+          return dataTemp[i2].push(d3.round(d[d2].$t, 2));
+        });
+      }
+    });
+    dataset.push(x);
+    i = 0;
+    while (i < dataTemp.length) {
+      dataset.push(dataTemp[i]);
+      i++;
+    }
+    return renderChart(dataset, x);
+  };
+  return renderChart = function(dataset, x) {
+    var chart, chartCase;
+    chartCase = $scope.appModel.chartType.key;
+    return chart = c3.generate({
+      bindto: ".demo",
+      data: {
+        x: "x",
+        columns: dataset,
+        type: chartCase
+      },
+      size: {
+        height: 480
+      },
+      axis: {
+        x: {
+          type: "category",
+          tick: {
+            rotate: 45,
+            multiline: false,
+            culling: {
+              max: 20
+            }
+          }
+        }
+      },
+      subchart: {
+        show: true
+      }
+    });
   };
 });
 

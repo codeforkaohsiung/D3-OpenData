@@ -9,8 +9,7 @@
 		<label>
 			圖表類型 <small class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="首先選擇你的圖表格式"></small>
 		</label>
-		<select id="chart-list" class="form-control">
-			<option ng-repeat="operator in chartType" title="{{operator.title}}" value="{{operator.key}}">{{operator.name}}</option>
+		<select class="form-control" ng-init="appModel.chartType = chartType[0]" ng-model="appModel.chartType" ng-options="operator as operator.name for operator in chartType" ng-change="renderData()">
 		</select>
 	</div>
 
@@ -19,9 +18,7 @@
 			X 軸
 			<small class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="選擇X軸，預設是表單的第一欄"></small>
 		</label>
-		<select name="" id="x-Axis" class="form-control" ng-init="appModel.xVal = appModel.jsonKey[0]" ng-model="appModel.xVal" ng-options="option for option in appModel.jsonKey">
-			 <!-- ng-model="somethingHere" ng-options="option.name for option in options" -->
-			<!-- <option ng-repeat="operator in appModel.jsonKey" value="{{operator}}">{{operator}}</option> -->
+		<select name="" id="x-Axis" class="form-control" ng-init="appModel.xVal = appModel.jsonKey[0]" ng-model="appModel.xVal" ng-options="option as option.name for option in appModel.jsonKey" ng-change="renderData()">
 		</select>
 	</div>
 
@@ -38,8 +35,8 @@
 			<ul id="checkform" class="dropdown-menu" ng-click="$event.stopPropagation()">
 				<li ng-repeat="item in appModel.jsonKey">
 					<label>
-						<input type="checkbox" value="{{item}}">
-							{{ replaceGSX(item) }}
+						<input type="checkbox" value="{{ item.name }}" ng-model="item.dataSelect" ng-change="renderData()">
+							{{ replaceGSX(item.name) }}
 					</label>
 				</li>	
 			</ul>
@@ -52,7 +49,7 @@
 			<label class="pull-right"><input type="checkbox" id="maximum"> 最大值</label>
 		</div>
 		<div>
-			<slider floor="0" ceiling="{{ appModel.xData.length }}"  ng-model-low="appModel.xDataMin" ng-model-high="appModel.xDataMax"></slider>
+			<slider floor="0" ceiling="{{ appModel.xData.length }}"  ng-model-low="appModel.xDataMin" ng-model-high="appModel.xDataMax" ></slider>
 		</div>
 		
 		<div class="row">

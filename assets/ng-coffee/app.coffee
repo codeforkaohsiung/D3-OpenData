@@ -6,13 +6,14 @@ app.controller('appCtrl', ($scope, $http)->
 	$scope.appModel = {}
 
 	$scope.appModel.chartShkey = '1x6C86tzJ2F8ZTau6g7uUNxSb496wuoIR2s2I9lEWQSI'
-	dataRemote = []
 	$scope.loadChart = (path)->
 		getGoogleChart($scope.appModel.chartShkey)
 	$scope.replaceGSX = (str)->
 		return str.replace('gsx$', '')
+	$scope.renderData = (name)->
+		renderData()
 
-	# Chart 
+	# Chart 的類型定義
 	$scope.chartType = chartType
 
 	# 取得資料
@@ -26,11 +27,12 @@ app.controller('appCtrl', ($scope, $http)->
 				'url': url,
 				'method': "GET"
 			).then((data)->
-				dataRemote = data.data.feed.entry
-				console.log data, dataRemote
-				$scope.appModel.jsonKey = getJsonKey(dataRemote) #取得資料標頭
-				$scope.appModel.xVal = $scope.appModel.jsonKey[0] #預設xVal
-				renderForm(dataRemote)
+				console.log data.data.feed
+				$scope.dataRemote = data.data.feed.entry
+				console.log data, $scope.dataRemote
+				$scope.appModel.jsonKey = getJsonKey($scope.dataRemote) #取得資料標頭
+				$scope.appModel.xVal = $scope.appModel.jsonKey[0].name #預設xVal
+				renderForm()
 				# renderData(dataRemote, jsonKey)
 			, (response)->
 				console.log('Fail:', response)
@@ -45,13 +47,13 @@ app.controller('appCtrl', ($scope, $http)->
 			orgKey.push key
 		i = 0
 		while i < orgKey.length
-			jsonKey.push orgKey[i]  if orgKey[i].indexOf(prefix) > -1
+			jsonKey.push {"name": orgKey[i]}  if orgKey[i].indexOf(prefix) > -1
 			i++
 
 		jsonKey
 
-	renderForm = (dataRemote) ->
-		# # render slider
+	renderForm = () ->
+		# 繪製表單
 		sliderData()
 
 		# if $.isEmptyObject(userControl)
@@ -59,6 +61,7 @@ app.controller('appCtrl', ($scope, $http)->
 		# else
 		# 	loadUserControl()
 
+	# 繪製Slider
 	xTemp = ''
 	sliderData = ()->
 		xData = []
@@ -66,63 +69,80 @@ app.controller('appCtrl', ($scope, $http)->
 		if xTemp != $scope.appModel.xVal && $scope.appModel.xVal != ''
 			xTemp = $scope.appModel.xVal
 		else if xTemp != $scope.appModel.xVal && $scope.appModel.xVal == ''
-			$scope.appModel.xVal = $scope.appModel.jsonKey[0]
+			$scope.appModel.xVal = $scope.appModel.jsonKey[0].name
 			xTemp = $scope.appModel.xVal
-		console.log dataRemote
-		max = 0
 		min = 0
+		console.log xTemp
 		# load x data
-		angular.forEach dataRemote, (d, i) ->
+		angular.forEach $scope.dataRemote, (d, i) ->
 			xData.push(d[xTemp].$t)
 		$scope.appModel.xData = xData
+		$scope.appModel.xDataMin = min
 		$scope.appModel.xDataMax = $scope.appModel.xData.length
+		renderData()
+
+	renderData = () ->
+		# 轉換數據 為C3.js用
+		dataset = []
+		x = ["x"]
+		xVal = $scope.appModel.xVal
+		dataVal = []
+		dataTemp = []
+		angular.forEach $scope.appModel.jsonKey, (d, i) ->
+			if d.dataSelect is true
+				dataVal.push(d.name)
+
+		# 將使用者選擇的資料暫存
+		k = 0
+		while k < dataVal.length
+			dataTemp.push [dataVal[k]]
+			k++
+
+		max = parseInt($scope.appModel.xDataMax, 10); 
+		min = parseInt($scope.appModel.xDataMin, 10); 
+		# convert to c3 json
+
+		i2 = 0
+
+		angular.forEach $scope.dataRemote, (d, i)->
+			if (i >= min and i < max)
+				x.push $scope.dataRemote[i][xVal].$t
+				angular.forEach dataVal, (d2, i2)->
+					dataTemp[i2].push d3.round(d[d2].$t, 2)
+
+		dataset.push x
+
+		i = 0
+		while i < dataTemp.length
+			dataset.push dataTemp[i]
+			i++
+
+		renderChart dataset, x
+
+	renderChart = (dataset, x)->
+		chartCase = $scope.appModel.chartType.key
+		chart = c3.generate(
+			bindto: ".demo"
+			data:
+				x: "x"
+				columns: dataset
+				type: chartCase
+			size:
+				height: 480
+			axis:
+				x:
+					type: "category"
+					tick:
+						rotate: 45
+						multiline: false
+						culling:
+							max: 20
+			# zoom: 
+			# 	enabled: true
+			subchart:
+				show: true
+		)		
 )
-# uiSlider = ()->
-# 		xVal = $(xAxis).val()
-# 		xData = []
-# 		if xTemp != xVal
-# 			xTemp = xVal
-# 			max = 0
-# 			min = 0
-# 			# load x data
-# 			$.each dataRemote[0], (i, d) ->
-# 				xData.push d[xVal].$t
-# 			xDataMax = xData.length
-
-# 			# max and min checkbox
-# 			maximumCheck.val(xDataMax)
-# 			minimumCheck.on 'change', ()->
-# 				if $(@).prop('checked')
-# 					chartSlider.slider('values', 0, 0)
-# 					$('#slider-min').text(xData[0])
-# 			maximumCheck.on 'change', ()->
-# 				if $(@).prop('checked')
-# 					chartSlider.slider('values', 1,$(@).val())
-# 					$('#slider-max').text(xData[xDataMax - 1])
-
-# 			# ui slider
-# 			slider = chartSlider.slider(
-# 				range: true,
-# 				min: 0,
-# 				max: xDataMax,
-# 				values: [ 0, xDataMax],
-# 				slide: (event, ui)->
-# 					max = ui.values[1]
-# 					min = ui.values[0]
-# 					# 更新資料
-# 					max is xDataMax || maximumCheck.prop('checked',false)
-# 					min is 0 || minimumCheck.prop('checked',false)
-# 					setTimeout( ->
-# 						renderSliderValue(min, max - 1)
-# 						userControl = {}
-# 						updateUserControl()
-# 					,100)
-# 				)		
-# 		renderSliderValue = (min, max)->
-# 			$('#slider-min').text(xData[min])
-# 			$('#slider-max').text(xData[max])
-
-# 		renderSliderValue(0, chartSlider.slider('values', 1) - 1)
 
 
 chartType = [
