@@ -4,23 +4,36 @@ app = angular.module('starter', ['ui.bootstrap', 'vr.directives.slider']);
 
 app.controller('appCtrl', ($scope, $http)->
 	$scope.appModel = {}
-
+	resetList = ['xVal','xDataMin', 'xDataMax', 'jsonKey', 'xData']
 	$scope.appModel.chartShkey = '1x6C86tzJ2F8ZTau6g7uUNxSb496wuoIR2s2I9lEWQSI'
 	$scope.loadChart = (path)->
+		resetData($scope.appModel, resetList) # 當使用者開啟試算表時，重置資料
+		$scope.appModel.chartShkey = path
 		getGoogleChart($scope.appModel.chartShkey)
 	$scope.replaceGSX = (str)->
 		return str.replace('gsx$', '')
 	$scope.renderData = (name)->
-		console.log 'aa'
-		renderData()
-	$scope.$watchCollection $scope.appModel, ()->
-		console.log $scope.appModel
 		renderData()
 
-	$scope.$watch($scope.appModel, (newValue, oldValue)-> 
-		if newValue
-			console.log "I see a data change!"
-	, true);
+	# 重置資料
+	resetData = (data, resetList)->
+		angular.forEach resetList, (d)->
+			 data[d] = ""
+		data
+
+	# test http 
+	jsonPath = 'data/test.json'
+	$http(
+		'url': jsonPath,
+		'method': "GET"
+	).then((data)->
+		console.log(data)
+		$scope.appModel = data.data
+		getGoogleChart($scope.appModel.chartShkey)
+	, (response)->
+		console.log('Fail:', response)
+	)
+
 	# Chart 的類型定義
 	$scope.chartType = chartType
 
@@ -39,7 +52,7 @@ app.controller('appCtrl', ($scope, $http)->
 				$scope.dataRemote = data.data.feed.entry
 				console.log data, $scope.dataRemote
 				$scope.appModel.jsonKey = getJsonKey($scope.dataRemote) #取得資料標頭
-				$scope.appModel.xVal = $scope.appModel.jsonKey[0].name #預設xVal
+				$scope.appModel.xVal = $scope.appModel.jsonKey[0] #預設xVal
 				renderForm()
 				# renderData(dataRemote, jsonKey)
 			, (response)->
@@ -50,55 +63,67 @@ app.controller('appCtrl', ($scope, $http)->
 	getJsonKey = (obj)->
 		orgKey = []
 		prefix = "gsx$"
-		jsonKey = []
+		jsonKeyTemp = []
 		for key of obj[0]
 			orgKey.push key
 		i = 0
 		while i < orgKey.length
-			jsonKey.push {"name": orgKey[i]}  if orgKey[i].indexOf(prefix) > -1
+			jsonKeyTemp.push {"name": orgKey[i]}  if orgKey[i].indexOf(prefix) > -1
 			i++
-
-		jsonKey
+		# 驗證原始資料
+		jsonKeyVerify = true
+		if $scope.appModel.jsonKey 
+			console.log $scope.appModel.jsonKey.length
+			angular.forEach $scope.appModel.jsonKey, (d,i)->
+				if $scope.appModel.jsonKey[i].name != jsonKeyTemp[i].name
+					jsonKeyVerify = false
+			if jsonKeyVerify
+				return $scope.appModel.jsonKey
+		jsonKeyTemp
 
 	renderForm = () ->
 		# 繪製表單
 		sliderData()
 
-		# if $.isEmptyObject(userControl)
-		# 	updateUserControl()
-		# else
-		# 	loadUserControl()
-
 	# 繪製Slider
 	xTemp = ''
 	sliderData = ()->
 		xData = []
-			# 如果使用者還沒有選擇，則先選擇第一個
-		if xTemp != $scope.appModel.xVal && $scope.appModel.xVal != ''
-			xTemp = $scope.appModel.xVal
-		else if xTemp != $scope.appModel.xVal && $scope.appModel.xVal == ''
+		# 如果使用者還沒有選擇，則先選擇第一個
+		if xTemp != $scope.appModel.xVal.name && $scope.appModel.xVal.name != ''
+			xTemp = $scope.appModel.xVal.name
+		else if xTemp != $scope.appModel.xVal.name && $scope.appModel.xVal.name == ''
 			$scope.appModel.xVal = $scope.appModel.jsonKey[0].name
-			xTemp = $scope.appModel.xVal
+			xTemp = $scope.appModel.xVal.name
 		min = 0
-		console.log xTemp
 		# load x data
 		angular.forEach $scope.dataRemote, (d, i) ->
 			xData.push(d[xTemp].$t)
 		$scope.appModel.xData = xData
-		$scope.appModel.xDataMin = min
-		$scope.appModel.xDataMax = $scope.appModel.xData.length
+		if !$scope.appModel.xDataMin
+			$scope.appModel.xDataMin = min
+		if !$scope.appModel.xDataMax
+			$scope.appModel.xDataMax = $scope.appModel.xData.length
+		
 		renderData()
 
 	renderData = () ->
 		# 轉換數據 為C3.js用
 		dataset = []
 		x = ["x"]
-		xVal = $scope.appModel.xVal
+		xVal = $scope.appModel.xVal.name
 		dataVal = []
 		dataTemp = []
 		angular.forEach $scope.appModel.jsonKey, (d, i) ->
 			if d.dataSelect is true
 				dataVal.push(d.name)
+
+		# slider x data
+		xTemp = $scope.appModel.xVal.name
+		xData = []
+		angular.forEach $scope.dataRemote, (d, i) ->
+			xData.push(d[xTemp].$t)
+		$scope.appModel.xData = xData		
 
 		# 將使用者選擇的資料暫存
 		k = 0

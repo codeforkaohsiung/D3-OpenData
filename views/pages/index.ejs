@@ -6,7 +6,7 @@
 		<div class="input-group">
 			<input id="getKey" type="text" ng-model="appModel.chartShkey" placeholder="Pleace type the Google Spreadsheet key" class="form-control">
 			<span class="input-group-btn">
-				<button id="submitGetKey" class="btn btn-danger" type="button" data-loading-text="Loading..." ng-click="loadChart()">開啟試算表</button>
+				<button id="submitGetKey" class="btn btn-danger" type="button" data-loading-text="Loading..." ng-click="loadChart(appModel.chartShkey)">開啟試算表</button>
 			</span>
 		</div>
 	</div>
@@ -16,9 +16,6 @@
 	<div class="section-intro index-section">
 		<% include intro %>
 	</div>
-	<pre>
-		{{ appModel | json}}
-		</pre>
 	<div class="section-chart index-section in active">
 		<% include chart %>
 		<!-- chart save -->

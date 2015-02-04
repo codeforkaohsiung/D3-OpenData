@@ -7,7 +7,7 @@
 
 	<div class="col-sm-3">
 		<label>
-			圖表類型 <small class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="首先選擇你的圖表格式"></small>
+			圖表類型
 		</label>
 		<select class="form-control" ng-init="appModel.chartType = chartType[0]" ng-model="appModel.chartType" ng-options="operator as operator.name for operator in chartType" ng-change="renderData()">
 		</select>
@@ -49,10 +49,8 @@
 			<label class="pull-right"><input type="checkbox" id="maximum"> 最大值</label>
 		</div>
 		<div>
-			<slider floor="0" ceiling="{{ appModel.xData.length }}"  ng-model-low="appModel.xDataMin" ng-model-high="appModel.xDataMax" ng-model="xDataVal" ng-change="renderData()"></slider>
+			<slider floor="0" ceiling="{{ appModel.xData.length }}" ng-model="appModel.xDataMin" ng-model-range="appModel.xDataMax" ng-change="renderData()"></slider>
 		</div>
-		<input type="text"  ng-model="appModel.xDataMin" ng-change="renderData()">
-		<input type="text"  ng-model="appModel.xDataMax" ng-change="renderData()">
 		<div class="row">
 			<div class="col-sm-6">Min: {{ appModel.xData[appModel.xDataMin] }}</div>
 			<div class="col-sm-6 text-right">Max: {{ appModel.xData[(appModel.xDataMax - 1)] }}</div>

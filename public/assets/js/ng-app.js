@@ -3,28 +3,38 @@ var app, chartType;
 app = angular.module('starter', ['ui.bootstrap', 'vr.directives.slider']);
 
 app.controller('appCtrl', function($scope, $http) {
-  var getGoogleChart, getJsonKey, renderChart, renderData, renderForm, sliderData, xTemp;
+  var getGoogleChart, getJsonKey, jsonPath, renderChart, renderData, renderForm, resetData, resetList, sliderData, xTemp;
   $scope.appModel = {};
+  resetList = ['xVal', 'xDataMin', 'xDataMax', 'jsonKey', 'xData'];
   $scope.appModel.chartShkey = '1x6C86tzJ2F8ZTau6g7uUNxSb496wuoIR2s2I9lEWQSI';
   $scope.loadChart = function(path) {
+    resetData($scope.appModel, resetList);
+    $scope.appModel.chartShkey = path;
     return getGoogleChart($scope.appModel.chartShkey);
   };
   $scope.replaceGSX = function(str) {
     return str.replace('gsx$', '');
   };
   $scope.renderData = function(name) {
-    console.log('aa');
     return renderData();
   };
-  $scope.$watchCollection($scope.appModel, function() {
-    console.log($scope.appModel);
-    return renderData();
+  resetData = function(data, resetList) {
+    angular.forEach(resetList, function(d) {
+      return data[d] = "";
+    });
+    return data;
+  };
+  jsonPath = 'data/test.json';
+  $http({
+    'url': jsonPath,
+    'method': "GET"
+  }).then(function(data) {
+    console.log(data);
+    $scope.appModel = data.data;
+    return getGoogleChart($scope.appModel.chartShkey);
+  }, function(response) {
+    return console.log('Fail:', response);
   });
-  $scope.$watch($scope.appModel, function(newValue, oldValue) {
-    if (newValue) {
-      return console.log("I see a data change!");
-    }
-  }, true);
   $scope.chartType = chartType;
   getGoogleChart = function(shkey) {
     var listKey, shCallback, shPath, url;
@@ -40,30 +50,42 @@ app.controller('appCtrl', function($scope, $http) {
       $scope.dataRemote = data.data.feed.entry;
       console.log(data, $scope.dataRemote);
       $scope.appModel.jsonKey = getJsonKey($scope.dataRemote);
-      $scope.appModel.xVal = $scope.appModel.jsonKey[0].name;
+      $scope.appModel.xVal = $scope.appModel.jsonKey[0];
       return renderForm();
     }, function(response) {
       return console.log('Fail:', response);
     });
   };
   getJsonKey = function(obj) {
-    var i, jsonKey, key, orgKey, prefix;
+    var i, jsonKeyTemp, jsonKeyVerify, key, orgKey, prefix;
     orgKey = [];
     prefix = "gsx$";
-    jsonKey = [];
+    jsonKeyTemp = [];
     for (key in obj[0]) {
       orgKey.push(key);
     }
     i = 0;
     while (i < orgKey.length) {
       if (orgKey[i].indexOf(prefix) > -1) {
-        jsonKey.push({
+        jsonKeyTemp.push({
           "name": orgKey[i]
         });
       }
       i++;
     }
-    return jsonKey;
+    jsonKeyVerify = true;
+    if ($scope.appModel.jsonKey) {
+      console.log($scope.appModel.jsonKey.length);
+      angular.forEach($scope.appModel.jsonKey, function(d, i) {
+        if ($scope.appModel.jsonKey[i].name !== jsonKeyTemp[i].name) {
+          return jsonKeyVerify = false;
+        }
+      });
+      if (jsonKeyVerify) {
+        return $scope.appModel.jsonKey;
+      }
+    }
+    return jsonKeyTemp;
   };
   renderForm = function() {
     return sliderData();
@@ -72,27 +94,30 @@ app.controller('appCtrl', function($scope, $http) {
   sliderData = function() {
     var min, xData;
     xData = [];
-    if (xTemp !== $scope.appModel.xVal && $scope.appModel.xVal !== '') {
-      xTemp = $scope.appModel.xVal;
-    } else if (xTemp !== $scope.appModel.xVal && $scope.appModel.xVal === '') {
+    if (xTemp !== $scope.appModel.xVal.name && $scope.appModel.xVal.name !== '') {
+      xTemp = $scope.appModel.xVal.name;
+    } else if (xTemp !== $scope.appModel.xVal.name && $scope.appModel.xVal.name === '') {
       $scope.appModel.xVal = $scope.appModel.jsonKey[0].name;
-      xTemp = $scope.appModel.xVal;
+      xTemp = $scope.appModel.xVal.name;
     }
     min = 0;
-    console.log(xTemp);
     angular.forEach($scope.dataRemote, function(d, i) {
       return xData.push(d[xTemp].$t);
     });
     $scope.appModel.xData = xData;
-    $scope.appModel.xDataMin = min;
-    $scope.appModel.xDataMax = $scope.appModel.xData.length;
+    if (!$scope.appModel.xDataMin) {
+      $scope.appModel.xDataMin = min;
+    }
+    if (!$scope.appModel.xDataMax) {
+      $scope.appModel.xDataMax = $scope.appModel.xData.length;
+    }
     return renderData();
   };
   renderData = function() {
-    var dataTemp, dataVal, dataset, i, i2, k, max, min, x, xVal;
+    var dataTemp, dataVal, dataset, i, i2, k, max, min, x, xData, xVal;
     dataset = [];
     x = ["x"];
-    xVal = $scope.appModel.xVal;
+    xVal = $scope.appModel.xVal.name;
     dataVal = [];
     dataTemp = [];
     angular.forEach($scope.appModel.jsonKey, function(d, i) {
@@ -100,6 +125,12 @@ app.controller('appCtrl', function($scope, $http) {
         return dataVal.push(d.name);
       }
     });
+    xTemp = $scope.appModel.xVal.name;
+    xData = [];
+    angular.forEach($scope.dataRemote, function(d, i) {
+      return xData.push(d[xTemp].$t);
+    });
+    $scope.appModel.xData = xData;
     k = 0;
     while (k < dataVal.length) {
       dataTemp.push([dataVal[k]]);
