@@ -8,6 +8,7 @@
 	<div class="col-sm-3">
 		<label>
 			圖表類型
+			<small class="glyphicon glyphicon-question-sign" tooltip="選擇你的圖表格式"></small>
 		</label>
 		<select class="form-control" ng-init="appModel.chartType = chartType[0]" ng-model="appModel.chartType" ng-options="operator as operator.name for operator in chartType" ng-change="renderData()">
 		</select>
@@ -16,7 +17,7 @@
 	<div class="col-sm-3">
 		<label for="x-Axis">
 			X 軸
-			<small class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="選擇X軸，預設是表單的第一欄"></small>
+			<small class="glyphicon glyphicon-question-sign" tooltip="選擇X軸，預設是表單的第一欄"></small>
 		</label>
 		<select name="" id="x-Axis" class="form-control" ng-init="appModel.xVal = appModel.jsonKey[0]" ng-model="appModel.xVal" ng-options="option as option.name for option in appModel.jsonKey" ng-change="renderData()">
 		</select>
@@ -25,7 +26,7 @@
 	<div class="col-sm-3 col-sm-offset-3 text-primary">
 		<label for="x-Axis">
 			資料
-			<small class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="選擇所需要的資料"></small>
+			<small class="glyphicon glyphicon-question-sign" tooltip="選擇所需要的資料"></small>
 		</label>
 		<div class="dropdown mega-dropdown dropdown-menu-right" dropdown on-toggle="toggled(open)">
 			<a type="button" class="btn btn-default block" dropdown-toggle>
@@ -42,20 +43,49 @@
 			</ul>
 		</div>
 	</div>
-	<div class="col-sm-6 col-sm-offset-3 mtm">
-		<div class="mbs text-center">
-			<label class="pull-left"><input type="checkbox" id="minimum"> 最小值</label>
-			<span>資料區間</span>
-			<label class="pull-right"><input type="checkbox" id="maximum"> 最大值</label>
+	<div class="clearfix"></div>
+	<div class="col-sm-3 mts">
+		<div class="text-right">
+			<label class="btn btn-default" ng-model="appModel.singlePoint" btn-checkbox ng-change="singlePointUpdate()">單點資料 <small class="glyphicon glyphicon-question-sign" tooltip="選取單點的資料(如單一的時間點)"></small></label>
 		</div>
-		<div>
-			<slider floor="0" ceiling="{{ appModel.xData.length }}" ng-model="appModel.xDataMin" ng-model-range="appModel.xDataMax" ng-change="renderData()"></slider>
+	</div>
+	<div class="col-sm-6 mts">
+		<div ng-class="{ 'hidden': appModel.singlePoint }">
+			<slider
+				floor="0" stretch="1" ceiling="{{ appModel.xData.length }}" ng-model="appModel.xDataMin" ng-model-range="appModel.xDataMax" 
+				ng-mouseup="sliderUpdate()"
+				ng-touchend="sliderUpdate()"
+				></slider>
+			<div class="row">
+			<div class="col-sm-4">Min: {{ appModel.xData[appModel.xDataMin] }}</div>
+			<div class="col-sm-4 text-center"><span>資料區間</span></div>
+			<div class="col-sm-4 text-right">Max: {{ appModel.xData[(appModel.xDataMax - 1)] }}</div>
 		</div>
-		<div class="row">
-			<div class="col-sm-6">Min: {{ appModel.xData[appModel.xDataMin] }}</div>
-			<div class="col-sm-6 text-right">Max: {{ appModel.xData[(appModel.xDataMax - 1)] }}</div>
 		</div>
+		<div ng-class="{ 'hidden': !appModel.singlePoint }">
+			<slider
+				floor="0" ceiling="{{ appModel.xData.length - 1 }}" ng-model="appModel.xDataMin" 
+				ng-mouseup="sliderUpdate()"
+				ng-touchend="sliderUpdate()"
+				></slider>
+			<div class="row">
+			<div class="col-sm-6">data point: {{ appModel.xData[appModel.xDataMin] }}</div>
+			<div class="col-sm-6 text-right"><span>單點資料</span></div>
+		</div>
+		</div>
+		
 	</div>	
+	<div class="col-sm-3 mts">
+		<div class="text-left">
+			<label ng-class="{ 'disabled': appModel.singlePoint }" 
+				class="btn btn-default pull-left" ng-model="appModel.xDataMaximum" btn-checkbox ng-change="maximumXdata()">最大值
+				<small class="glyphicon glyphicon-question-sign" tooltip="X 軸資料最大值(單點資料不適用)"></small>
+				</label>
+			<!-- <label class="pull-right"><input type="checkbox" id="maximum"> 最大值</label> -->
+		</div>
+	</div>
+
+	
 </div>
 
 <div class="row mbl">

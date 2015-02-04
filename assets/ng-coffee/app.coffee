@@ -1,6 +1,4 @@
-app = angular.module('starter', ['ui.bootstrap', 'vr.directives.slider']);
-
-
+app = angular.module('starter', ['ui.bootstrap', 'vr.directives.slider', 'ngTouch']);
 
 app.controller('appCtrl', ($scope, $http)->
 	$scope.appModel = {}
@@ -13,6 +11,18 @@ app.controller('appCtrl', ($scope, $http)->
 	$scope.replaceGSX = (str)->
 		return str.replace('gsx$', '')
 	$scope.renderData = (name)->
+		renderData()
+
+	$scope.maximumXdata = ()->
+		if $scope.appModel.xDataMaximum
+			$scope.appModel.xDataMax = $scope.appModel.xData.length
+	$scope.singlePointUpdate = ()->
+		if $scope.appModel.singlePoint
+			$scope.appModel.xDataMaximum = false
+		$scope.$broadcast('refreshSlider')
+	$scope.sliderUpdate = ()->
+		if $scope.appModel.xDataMax != $scope.appModel.xData.length
+			$scope.appModel.xDataMaximum = false
 		renderData()
 
 	# 重置資料
@@ -102,7 +112,7 @@ app.controller('appCtrl', ($scope, $http)->
 		$scope.appModel.xData = xData
 		if !$scope.appModel.xDataMin
 			$scope.appModel.xDataMin = min
-		if !$scope.appModel.xDataMax
+		if !$scope.appModel.xDataMax || $scope.appModel.xDataMaximum
 			$scope.appModel.xDataMax = $scope.appModel.xData.length
 		
 		renderData()
@@ -137,11 +147,20 @@ app.controller('appCtrl', ($scope, $http)->
 
 		i2 = 0
 
-		angular.forEach $scope.dataRemote, (d, i)->
-			if (i >= min and i < max)
-				x.push $scope.dataRemote[i][xVal].$t
-				angular.forEach dataVal, (d2, i2)->
-					dataTemp[i2].push d3.round(d[d2].$t, 2)
+
+		# 如果是單點資料
+		if $scope.appModel.singlePoint
+			angular.forEach $scope.dataRemote, (d, i)->
+				if (i is min)
+					x.push $scope.dataRemote[i][xVal].$t
+					angular.forEach dataVal, (d2, i2)->
+						dataTemp[i2].push d3.round(d[d2].$t, 2)
+		else
+			angular.forEach $scope.dataRemote, (d, i)->
+				if (i >= min and i < max)
+					x.push $scope.dataRemote[i][xVal].$t
+					angular.forEach dataVal, (d2, i2)->
+						dataTemp[i2].push d3.round(d[d2].$t, 2)
 
 		dataset.push x
 

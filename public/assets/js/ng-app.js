@@ -1,6 +1,6 @@
 var app, chartType;
 
-app = angular.module('starter', ['ui.bootstrap', 'vr.directives.slider']);
+app = angular.module('starter', ['ui.bootstrap', 'vr.directives.slider', 'ngTouch']);
 
 app.controller('appCtrl', function($scope, $http) {
   var getGoogleChart, getJsonKey, jsonPath, renderChart, renderData, renderForm, resetData, resetList, sliderData, xTemp;
@@ -16,6 +16,23 @@ app.controller('appCtrl', function($scope, $http) {
     return str.replace('gsx$', '');
   };
   $scope.renderData = function(name) {
+    return renderData();
+  };
+  $scope.maximumXdata = function() {
+    if ($scope.appModel.xDataMaximum) {
+      return $scope.appModel.xDataMax = $scope.appModel.xData.length;
+    }
+  };
+  $scope.singlePointUpdate = function() {
+    if ($scope.appModel.singlePoint) {
+      $scope.appModel.xDataMaximum = false;
+    }
+    return $scope.$broadcast('refreshSlider');
+  };
+  $scope.sliderUpdate = function() {
+    if ($scope.appModel.xDataMax !== $scope.appModel.xData.length) {
+      $scope.appModel.xDataMaximum = false;
+    }
     return renderData();
   };
   resetData = function(data, resetList) {
@@ -108,7 +125,7 @@ app.controller('appCtrl', function($scope, $http) {
     if (!$scope.appModel.xDataMin) {
       $scope.appModel.xDataMin = min;
     }
-    if (!$scope.appModel.xDataMax) {
+    if (!$scope.appModel.xDataMax || $scope.appModel.xDataMaximum) {
       $scope.appModel.xDataMax = $scope.appModel.xData.length;
     }
     return renderData();
@@ -139,14 +156,25 @@ app.controller('appCtrl', function($scope, $http) {
     max = parseInt($scope.appModel.xDataMax, 10);
     min = parseInt($scope.appModel.xDataMin, 10);
     i2 = 0;
-    angular.forEach($scope.dataRemote, function(d, i) {
-      if (i >= min && i < max) {
-        x.push($scope.dataRemote[i][xVal].$t);
-        return angular.forEach(dataVal, function(d2, i2) {
-          return dataTemp[i2].push(d3.round(d[d2].$t, 2));
-        });
-      }
-    });
+    if ($scope.appModel.singlePoint) {
+      angular.forEach($scope.dataRemote, function(d, i) {
+        if (i === min) {
+          x.push($scope.dataRemote[i][xVal].$t);
+          return angular.forEach(dataVal, function(d2, i2) {
+            return dataTemp[i2].push(d3.round(d[d2].$t, 2));
+          });
+        }
+      });
+    } else {
+      angular.forEach($scope.dataRemote, function(d, i) {
+        if (i >= min && i < max) {
+          x.push($scope.dataRemote[i][xVal].$t);
+          return angular.forEach(dataVal, function(d2, i2) {
+            return dataTemp[i2].push(d3.round(d[d2].$t, 2));
+          });
+        }
+      });
+    }
     dataset.push(x);
     i = 0;
     while (i < dataTemp.length) {
