@@ -28,6 +28,7 @@ app.get('/', page.index);
 app.get('/add', page.add);
 app.get('/doc', page.doc);
 app.get('/showcase', page.showcase);
+app.get('/storyEditor', page.storyEditor);
 app.get('/page/:id', page.page);
 // app.get('/demopage', page.demopage);
 app.post('/saveImage', page.saveImage);

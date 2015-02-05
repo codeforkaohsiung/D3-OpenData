@@ -10,6 +10,13 @@ exports.index = function(req, res) {
 exports.add = function(req, res) {
     res.render('pages/add');
 };
+exports.storyEditor = function(req, res) {
+    res.render('pages/storyEditor',{
+        ogheadTitle: '故事模式',
+        ogdescription: '',
+        ogImage: ''
+    });
+};
 exports.doc = function(req, res) {
     res.render('pages/doc',{
         ogheadTitle: '使用教學',

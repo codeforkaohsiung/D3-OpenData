@@ -1,0 +1,55 @@
+.story-box
+	$story-width: 320px
+	$story-title-height: 46px
+	background-color: $gray-dark
+	position: fixed 
+	bottom: 0
+	left: 0
+	top: 0
+	padding: $gutter
+	width: $story-width
+	color: $gray-lighter
+	z-index: $zindex-storyCtrl
+	box-shadow: $z-depth-3
+	.relative
+		width: 100%
+		height: 100%
+	.story-box-hot-key
+		position: absolute
+		right: - $gutter
+		top: $story-title-height
+		+transform(translateX(100%))
+
+	.story-title
+		color: $gray-light
+		margin-top: 0
+		height: $story-title-height
+		border-bottom: dotted 1px rgba($gray-light, .6)
+	.story-content
+		position: absolute
+		top: $story-title-height
+		bottom: 0
+		left: 0
+		right: 0
+
+	//story list
+	.row-item-list
+		.item-list-wrap
+			padding: $gutter
+			border: 1px solid rgba(white, .16)
+			& + .item-list-wrap
+				margin-top: $gutter
+		.item-list-header
+			margin-top: 0
+		.item-list-body
+		.item-list-footer
+			
+
+	// bootstrap components
+	.breadcrumb
+		background-color: transparent
+		padding-left: 0
+	.form-control
+		background-color: transparent
+
+

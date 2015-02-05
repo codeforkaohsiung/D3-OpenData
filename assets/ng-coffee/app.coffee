@@ -1,13 +1,26 @@
 app = angular.module('starter', ['ui.bootstrap', 'vr.directives.slider', 'ngTouch']);
 
+
 app.controller('appCtrl', ($scope, $http)->
+)	
+
+app.controller('storyCtrl', ($scope, $http)->
+)
+
+app.controller('chartCtrl', ($scope, $http)->
 	$scope.appModel = {}
-	resetList = ['xVal','xDataMin', 'xDataMax', 'jsonKey', 'xData']
+	$scope.pageStatus = {}
+	$scope.pageStatus.start = false
+	resetList = ['xVal','xDataMin', 'xDataMax', 'jsonKey', 'xData', 'content']
 	$scope.appModel.chartShkey = '1x6C86tzJ2F8ZTau6g7uUNxSb496wuoIR2s2I9lEWQSI'
+	$scope.enterChart = (keyEvent, path)-> # 鍵盤事件
+		if keyEvent.keyCode is 13 
+			$scope.loadChart(path)
 	$scope.loadChart = (path)->
 		resetData($scope.appModel, resetList) # 當使用者開啟試算表時，重置資料
 		$scope.appModel.chartShkey = path
 		getGoogleChart($scope.appModel.chartShkey)
+
 	$scope.replaceGSX = (str)->
 		return str.replace('gsx$', '')
 	$scope.renderData = (name)->
@@ -31,18 +44,17 @@ app.controller('appCtrl', ($scope, $http)->
 			 data[d] = ""
 		data
 
-	# test http 
-	jsonPath = 'data/test.json'
-	$http(
-		'url': jsonPath,
-		'method': "GET"
-	).then((data)->
-		console.log(data)
-		$scope.appModel = data.data
-		getGoogleChart($scope.appModel.chartShkey)
-	, (response)->
-		console.log('Fail:', response)
-	)
+	# test http 進入頁面後讀取...
+	# jsonPath = 'data/test.json'
+	# $http(
+	# 	'url': jsonPath,
+	# 	'method': "GET"
+	# ).then((data)->
+	# 	$scope.appModel = data.data
+	# 	getGoogleChart($scope.appModel.chartShkey)
+	# , (response)->
+	# 	console.log('Fail:', response)
+	# )
 
 	# Chart 的類型定義
 	$scope.chartType = chartType
@@ -58,16 +70,17 @@ app.controller('appCtrl', ($scope, $http)->
 				'url': url,
 				'method': "GET"
 			).then((data)->
-				console.log data.data.feed
 				$scope.dataRemote = data.data.feed.entry
-				console.log data, $scope.dataRemote
 				$scope.appModel.jsonKey = getJsonKey($scope.dataRemote) #取得資料標頭
 				$scope.appModel.xVal = $scope.appModel.jsonKey[0] #預設xVal
 				renderForm()
-				# renderData(dataRemote, jsonKey)
 			, (response)->
 				console.log('Fail:', response)
 			)
+# 			$http.get('/status', {
+#   ignoreLoadingBar: true
+# });
+		$scope.pageStatus.start = true
 
 	# 取得資料標頭
 	getJsonKey = (obj)->

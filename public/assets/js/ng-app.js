@@ -2,11 +2,22 @@ var app, chartType;
 
 app = angular.module('starter', ['ui.bootstrap', 'vr.directives.slider', 'ngTouch']);
 
-app.controller('appCtrl', function($scope, $http) {
-  var getGoogleChart, getJsonKey, jsonPath, renderChart, renderData, renderForm, resetData, resetList, sliderData, xTemp;
+app.controller('appCtrl', function($scope, $http) {});
+
+app.controller('storyCtrl', function($scope, $http) {});
+
+app.controller('chartCtrl', function($scope, $http) {
+  var getGoogleChart, getJsonKey, renderChart, renderData, renderForm, resetData, resetList, sliderData, xTemp;
   $scope.appModel = {};
-  resetList = ['xVal', 'xDataMin', 'xDataMax', 'jsonKey', 'xData'];
+  $scope.pageStatus = {};
+  $scope.pageStatus.start = false;
+  resetList = ['xVal', 'xDataMin', 'xDataMax', 'jsonKey', 'xData', 'content'];
   $scope.appModel.chartShkey = '1x6C86tzJ2F8ZTau6g7uUNxSb496wuoIR2s2I9lEWQSI';
+  $scope.enterChart = function(keyEvent, path) {
+    if (keyEvent.keyCode === 13) {
+      return $scope.loadChart(path);
+    }
+  };
   $scope.loadChart = function(path) {
     resetData($scope.appModel, resetList);
     $scope.appModel.chartShkey = path;
@@ -41,17 +52,6 @@ app.controller('appCtrl', function($scope, $http) {
     });
     return data;
   };
-  jsonPath = 'data/test.json';
-  $http({
-    'url': jsonPath,
-    'method': "GET"
-  }).then(function(data) {
-    console.log(data);
-    $scope.appModel = data.data;
-    return getGoogleChart($scope.appModel.chartShkey);
-  }, function(response) {
-    return console.log('Fail:', response);
-  });
   $scope.chartType = chartType;
   getGoogleChart = function(shkey) {
     var listKey, shCallback, shPath, url;
@@ -59,19 +59,18 @@ app.controller('appCtrl', function($scope, $http) {
     shCallback = '/public/values?alt=json';
     listKey = 'od6';
     url = shPath + shkey + '/' + listKey + shCallback;
-    return $http({
+    $http({
       'url': url,
       'method': "GET"
     }).then(function(data) {
-      console.log(data.data.feed);
       $scope.dataRemote = data.data.feed.entry;
-      console.log(data, $scope.dataRemote);
       $scope.appModel.jsonKey = getJsonKey($scope.dataRemote);
       $scope.appModel.xVal = $scope.appModel.jsonKey[0];
       return renderForm();
     }, function(response) {
       return console.log('Fail:', response);
     });
+    return $scope.pageStatus.start = true;
   };
   getJsonKey = function(obj) {
     var i, jsonKeyTemp, jsonKeyVerify, key, orgKey, prefix;

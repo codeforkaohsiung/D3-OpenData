@@ -1,55 +1,30 @@
 <% layout( '../layout' ) -%> 
-<div class="text-center header-banner index mbl">
-	<div class="banner-imgae"></div>
-	<div class="col-sm-6 col-sm-offset-3">
+<div  ng-controller="chartCtrl">
+	<div class="text-center header-banner index mbl" ng-class="{ 'index': !pageStatus.start }">
+		<div class="banner-imgae"></div>
+		<div class="col-sm-6 col-sm-offset-3">
 
-		<div class="input-group">
-			<input id="getKey" type="text" ng-model="appModel.chartShkey" placeholder="Pleace type the Google Spreadsheet key" class="form-control">
-			<span class="input-group-btn">
-				<button id="submitGetKey" class="btn btn-danger" type="button" data-loading-text="Loading..." ng-click="loadChart(appModel.chartShkey)">開啟試算表</button>
-			</span>
+			<div class="input-group">
+				<input id="getKey" type="text" ng-model="appModel.chartShkey" placeholder="Pleace type the Google Spreadsheet key" class="form-control" ng-keypress="enterChart($event, appModel.chartShkey)" >
+				<span class="input-group-btn">
+					<button id="submitGetKey" class="btn btn-danger" type="button" data-loading-text="Loading..." ng-click="loadChart(appModel.chartShkey)">開啟試算表</button>
+				</span>
+			</div>
 		</div>
 	</div>
-</div>
 
-<div class="container-fluid container">
-	<div class="section-intro index-section">
-		<% include intro %>
-	</div>
-	<div class="section-chart index-section in active">
-		<% include chart %>
-		<!-- chart save -->
-		<div class="row mbl">
-		  <div class="col-sm-6" >
-		    <img id="chartImg" src="/upload/test-img.png" alt="" class="img-responsive">
-		    <canvas id="canvas" style="display:none" width="1000" height="531"></canvas>
-		    <div class="text-center mtm">
-		      <a id="updateImg" type="button" class="btn btn-default btn-xs">更新圖片</a>
-		      <a id="downloadImg" type="button" class="btn btn-default btn-xs">下載圖片</a>
-		    </div>
-		  </div>
-		  <div class="col-sm-6">
-		    <form action="" class="form">
-		      <div class="form-group">
-		        <label for="chartName">圖表名稱</label>
-		        <input type="text" class="form-control" id="chartName" placeholder="圖表名稱">
-		      </div>
-		      <div class="form-group">
-		        <label for="chartKey">Google 試算表 Key </label>
-		        <input type="text" class="form-control" id="chartKey" disabled="">
-		      </div>
-		      <div class="form-group">
-		        <label for="chartDiscription">描述</label>
-		        <textarea class="form-control" id="chartDiscription" rows="3" placeholder="對你的圖表做點描述"></textarea>
-		      </div>
-		      <div class="text-right">
-		        <button type="button" class="btn btn-primary jq-SaveData">分享到展示區</button>
-		      </div>
-		    </form>
-		  </div>
+	<div class="container-fluid container" >
+		<div class="section-intro index-section" ng-class="{ 'active in': !pageStatus.start }">
+			<% include intro %>
 		</div>
-		<!-- chart save end -->
+		<div class="section-chart index-section" ng-class="{ 'active in': pageStatus.start }">
+			<% include ../partials/chart %>
+			<!-- chart save -->
+			<% include ../partials/chartContentForm %>
+			
+			<!-- chart save end -->
+		</div>
+
 	</div>
 
 </div>
-
