@@ -72,6 +72,13 @@ app.controller('chartCtrl', function($scope, $http) {
     });
     return $scope.pageStatus.start = true;
   };
+  $scope.saveGoogleChart = function() {
+    return $http.post('/saveImage', {
+      googleId: $scope.appModel.chartShkey
+    }).success(function(data, status, headers, config) {
+      return console.log(data);
+    }).error(function(data, status, headers, config) {});
+  };
   getJsonKey = function(obj) {
     var i, jsonKeyTemp, jsonKeyVerify, key, orgKey, prefix;
     orgKey = [];

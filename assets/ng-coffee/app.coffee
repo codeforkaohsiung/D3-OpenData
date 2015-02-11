@@ -81,6 +81,13 @@ app.controller('chartCtrl', ($scope, $http)->
 #   ignoreLoadingBar: true
 # });
 		$scope.pageStatus.start = true
+	# 儲存資料  
+
+	$scope.saveGoogleChart = ()->
+		$http.post('/saveImage', googleId: $scope.appModel.chartShkey).success((data, status, headers, config) ->
+			console.log(data)
+		).error (data, status, headers, config) ->
+		 
 
 	# 取得資料標頭
 	getJsonKey = (obj)->
