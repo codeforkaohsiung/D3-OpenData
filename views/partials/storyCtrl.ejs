@@ -15,71 +15,139 @@
 		<h3 class="story-title"><i class="glyphicon glyphicon glyphicon-blackboard"></i> 故事模式</h3>
 		<div class="story-content overflow-x">
 		
-			<!-- <div>
-				<ol class="breadcrumb">
-					<li class="active">故事模式</li>
-				</ol>
-				<a href="#" class="btn btn-lg btn-block text-left">
-					<i class="glyphicon glyphicon-align-left"></i>	編輯摘要
-				</a>
-				<a href="#" class="btn btn-lg btn-block text-left">
-					<i class="glyphicon glyphicon-facetime-video"></i> 編輯圖表故事
-				</a>
-			</div> -->
-
-			<!-- <hr> -->
-			<!-- index -->
-
-			<div>
-				<!-- <ol class="breadcrumb">
-					<li><a href="#"><i class="glyphicon glyphicon-chevron-left"></i> 故事模式</a></li>
-					<li class="active">編輯圖表故事</li>
-				</ol> -->
-
-				<div class="row-item-list">
-					<ul class="overflow-x">
-						<li class="item-list-wrap" ng-repeat="item in storyModel.chapters">
-							<h3 class="item-list-header">{{ item.title }}</h3>
-							<div class="item-list-body">
-								<p>{{ item.description }}</p>
+			<div class="row-item-list">
+				<ul class="overflow-x">
+					<li class="item-list-wrap" ng-repeat="item in storyModel.chapters">
+						<h3 class="item-list-header">{{ item.content.chartName }}</h3>
+						<div class="item-list-body">
+							<p>{{ item.content.description }}</p>
+						</div>
+						<div class="item-list-footer text-right">
+							<div class="btn-group btn-group-sm ">
+								<a href="#" class="btn">Remove</a>
+								<a href="#{{item.id}}" class="btn">Edit</a>
 							</div>
-							<div class="item-list-footer text-right">
-								<div class="btn-group btn-group-sm ">
-									<a href="#" class="btn">Remove</a>
-									<a href="#" class="btn">Edit</a>
-								</div>
-							</div>
-						</li>
-						<li class="item-list-wrap">
-							<div class="item-list-center text-center">
-								<a href="#" class="btn btn-lg btn-block"><i class="glyphicon glyphicon-plus"></i></a>
-							</div>
-						</li>
-					</ul>
-				</div>
+						</div>
+					</li>
+					<li class="item-list-wrap">
+						<div class="item-list-center text-center">
+							<a href="#" class="btn btn-lg btn-block" ng-click="storyNewChapter()"><i class="glyphicon glyphicon-plus"></i></a>
+						</div>
+					</li>
+				</ul>
 			</div>
-
-			<!-- <hr> -->
-			<!-- story list -->
-
-			<!-- <div>
-				<ol class="breadcrumb">
-					<li><a href="#"><i class="glyphicon glyphicon-chevron-left"></i> 編輯圖表故事</a></li>
-					<li class="active">Chart 1</li>
-				</ol>
-				<div class="form-group">
-					<label for="sectionTitle">章節標題</label>
-					<input type="text" class="form-control" id="sectionTitle" placeholder="請輸入標題">
-				</div>
-				<div class="form-group">
-					<label for="sectionDescrip">章節描述</label>
-					<textarea id="sectionDescrip" class="form-control" cols="30" rows="10"  placeholder="輸入描述"></textarea>
-				</div>
-				<div class="text-right">
-					<a href="#" class="btn btn-primary">儲存頁面變更</a>
-				</div>
-			</div> -->
+			
 
 		</div>
 	</div>
 </div>
+
+<script>
+var chapters = 	[
+    {
+      "id": "1424934801703",
+      "chartShkey": "1x6C86tzJ2F8ZTau6g7uUNxSb496wuoIR2s2I9lEWQSI",
+      "chartType": {
+        "name": "折線圖 Line",
+        "key": "line"
+      },
+      "xVal": {
+        "name": "gsx$時間"
+      },
+      "xDataMin": 9,
+      "xDataMax": 22,
+      "jsonKey": [
+        {
+          "name": "gsx$時間"
+        },
+        {
+          "name": "gsx$區域別總計總計"
+        },
+        {
+          "name": "gsx$新北市總計",
+          "dataSelect": true
+        },
+        {
+          "name": "gsx$臺北市總計",
+          "dataSelect": true
+        },
+        {
+          "name": "gsx$高雄市總計",
+          "dataSelect": true
+        },
+        {
+          "name": "gsx$區域別總計幼兒人口"
+        },
+        {
+          "name": "gsx$新北市幼兒人口"
+        },
+        {
+          "name": "gsx$臺北市幼兒人口"
+        },
+        {
+          "name": "gsx$高雄市幼兒人口"
+        },
+        {
+          "name": "gsx$區域別總計工作人口"
+        },
+        {
+          "name": "gsx$新北市工作人口"
+        },
+        {
+          "name": "gsx$臺北市工作人口"
+        },
+        {
+          "name": "gsx$高雄市工作人口"
+        },
+        {
+          "name": "gsx$區域別總計老年人口"
+        },
+        {
+          "name": "gsx$新北市老年人口"
+        },
+        {
+          "name": "gsx$臺北市老年人口"
+        },
+        {
+          "name": "gsx$高雄市老年人口"
+        }
+      ],
+      "xData": [
+        "81年",
+        "82年",
+        "83年",
+        "84年",
+        "85年",
+        "86年",
+        "87年",
+        "88年",
+        "89年",
+        "90年",
+        "91年",
+        "92年",
+        "93年",
+        "94年",
+        "95年",
+        "96年",
+        "97年",
+        "98年",
+        "99年",
+        "100年",
+        "101年",
+        "102年"
+      ],
+      "content": {
+        "chartName": "台北市",
+        "description": "生育率"
+      }
+    },
+    {
+      "id": "2",
+      "key": "bbb",
+      "content": {
+        "chartName": "REGRasvdsvEG",
+        "description": "ERGREsavsvGR"
+      }
+    }
+  ]
+</script>

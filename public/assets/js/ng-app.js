@@ -1,10 +1,11 @@
-var app, chapters, chartType;
+var app, chartType;
 
 app = angular.module('starter', ['ui.bootstrap', 'vr.directives.slider', 'ngTouch']);
 
 app.controller('appCtrl', function($scope, $http) {});
 
 app.controller('storyCtrl', function($scope, $http) {
+  var updateStoryData;
   $scope.storyModel = {};
   $scope.storyModel.showStoryBox = false;
   $scope.showStoryBox = function(e) {
@@ -15,12 +16,46 @@ app.controller('storyCtrl', function($scope, $http) {
     }
     return console.log($scope.storyModel.showStoryBox);
   };
-  return $scope.storyModel.chapters = chapters;
+  $scope.storyModel.chapters = chapters;
+  $scope.storyNewChapter = function() {
+    var idTemp, nowDate;
+    nowDate = new Date();
+    idTemp = nowDate.getTime();
+    console.log(idTemp);
+    return $scope.$broadcast('storyShareAddNewChapter', idTemp);
+  };
+  $scope.$on('updateShareStoryData', function(event, chapterJson, id) {
+    console.log(chapterJson);
+    return updateStoryData(id, chapterJson);
+  });
+  updateStoryData = function(id, chapterJson) {
+    return angular.forEach($scope.storyModel.chapters, function(d, i) {
+      if (d.id === id) {
+        return $scope.storyModel.chapters[i] = chapterJson;
+      }
+    });
+  };
+  $scope.currentChapter = function() {
+    var currentModel, currentPath;
+    currentPath = window.location.hash.substr(1);
+    currentModel = {};
+    angular.forEach($scope.storyModel.chapters, function(d, i) {
+      if (d.id === currentPath) {
+        return currentModel = $scope.storyModel.chapters[i];
+      } else {
+        return currentModel = $scope.storyModel.chapters[0];
+      }
+    });
+    console.log(currentModel, 'aa');
+    return $scope.$broadcast('storyShareCurrentChapter', currentModel);
+  };
+  return $scope.currentChapter();
 });
 
 app.controller('chartCtrl', function($scope, $http) {
   var getGoogleChart, getJsonKey, renderChart, renderData, renderForm, resetData, resetList, sliderData, xTemp;
   $scope.appModel = {};
+  $scope.appModel.id = '1424934801703';
   $scope.pageStatus = {};
   $scope.pageStatus.start = false;
   resetList = ['xVal', 'xDataMin', 'xDataMax', 'jsonKey', 'xData', 'content'];
@@ -33,7 +68,8 @@ app.controller('chartCtrl', function($scope, $http) {
   $scope.loadChart = function(path) {
     resetData($scope.appModel, resetList);
     $scope.appModel.chartShkey = path;
-    return getGoogleChart($scope.appModel.chartShkey);
+    getGoogleChart($scope.appModel.chartShkey);
+    return $scope.$emit('updateShareStoryData', $scope.appModel, $scope.appModel.id);
   };
   $scope.replaceGSX = function(str) {
     return str.replace('gsx$', '');
@@ -58,6 +94,11 @@ app.controller('chartCtrl', function($scope, $http) {
     }
     return renderData();
   };
+  $scope.$on('storyShareCurrentChapter', function(currentModel) {
+    $scope.appModel = currentModel;
+    console.log(currentModel, 'bb');
+    return $scope.loadChart($scope.appModel.chartShkey);
+  });
   resetData = function(data, resetList) {
     angular.forEach(resetList, function(d) {
       return data[d] = "";
@@ -245,17 +286,5 @@ chartType = [
   }, {
     name: "圓環 Donut Chart",
     key: "donut"
-  }
-];
-
-chapters = [
-  {
-    title: '123',
-    key: 'aaa',
-    description: 'ccc'
-  }, {
-    title: '234',
-    key: 'bbb',
-    description: 'ccc'
   }
 ];

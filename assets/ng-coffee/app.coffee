@@ -1,4 +1,4 @@
-app = angular.module('starter', ['ui.bootstrap', 'vr.directives.slider', 'ngTouch']);
+app = angular.module('starter', ['ui.bootstrap', 'vr.directives.slider', 'ngTouch'])
 
 app.controller('appCtrl', ($scope, $http)->
 )	
@@ -14,10 +14,43 @@ app.controller('storyCtrl', ($scope, $http)->
 		console.log $scope.storyModel.showStoryBox
 
 	$scope.storyModel.chapters = chapters
+
+
+	# new chapter
+	$scope.storyNewChapter = ()->
+		nowDate = new Date()
+		idTemp = nowDate.getTime()
+		console.log idTemp
+		$scope.$broadcast 'storyShareAddNewChapter', idTemp
+
+	# save from chartCtrl SaveStoryData
+	$scope.$on 'updateShareStoryData', (event, chapterJson, id )->
+		console.log chapterJson
+		updateStoryData(id, chapterJson)
+	# update story
+	updateStoryData = (id, chapterJson)->
+		angular.forEach $scope.storyModel.chapters, (d, i)->
+			if d.id is id
+				$scope.storyModel.chapters[i] = chapterJson
+
+	# Open current path
+	$scope.currentChapter = ()->
+		currentPath = window.location.hash.substr(1)
+		currentModel = {}
+		angular.forEach $scope.storyModel.chapters, (d, i)->
+			if d.id is currentPath
+				currentModel = $scope.storyModel.chapters[i]
+			else 
+				currentModel = $scope.storyModel.chapters[0]
+		console.log currentModel, 'aa'
+		$scope.$broadcast('storyShareCurrentChapter', currentModel)
+	
+	$scope.currentChapter()
 )
 
 app.controller('chartCtrl', ($scope, $http)->
 	$scope.appModel = {}
+	$scope.appModel.id = '1424934801703' # Temp
 	$scope.pageStatus = {}
 	$scope.pageStatus.start = false
 	resetList = ['xVal','xDataMin', 'xDataMax', 'jsonKey', 'xData', 'content']
@@ -25,10 +58,12 @@ app.controller('chartCtrl', ($scope, $http)->
 	$scope.enterChart = (keyEvent, path)-> # 鍵盤事件
 		if keyEvent.keyCode is 13 
 			$scope.loadChart(path)
+
 	$scope.loadChart = (path)->
 		resetData($scope.appModel, resetList) # 當使用者開啟試算表時，重置資料
 		$scope.appModel.chartShkey = path
 		getGoogleChart($scope.appModel.chartShkey)
+		$scope.$emit('updateShareStoryData', $scope.appModel, $scope.appModel.id)
 
 	$scope.replaceGSX = (str)->
 		return str.replace('gsx$', '')
@@ -47,23 +82,18 @@ app.controller('chartCtrl', ($scope, $http)->
 			$scope.appModel.xDataMaximum = false
 		renderData()
 
+	# Story Mode
+	$scope.$on 'storyShareCurrentChapter', (currentModel)->
+		$scope.appModel = currentModel
+		console.log currentModel, 'bb'
+		$scope.loadChart($scope.appModel.chartShkey)
+	# Story Mode end 
+
 	# 重置資料
 	resetData = (data, resetList)->
 		angular.forEach resetList, (d)->
 			 data[d] = ""
 		data
-
-	# test http 進入頁面後讀取...
-	# jsonPath = 'data/test.json'
-	# $http(
-	# 	'url': jsonPath,
-	# 	'method': "GET"
-	# ).then((data)->
-	# 	$scope.appModel = data.data
-	# 	getGoogleChart($scope.appModel.chartShkey)
-	# , (response)->
-	# 	console.log('Fail:', response)
-	# )
 
 	# Chart 的類型定義
 	$scope.chartType = chartType
@@ -86,9 +116,7 @@ app.controller('chartCtrl', ($scope, $http)->
 			, (response)->
 				console.log('Fail:', response)
 			)
-# 			$http.get('/status', {
-#   ignoreLoadingBar: true
-# });
+
 		$scope.pageStatus.start = true
 
 	# 取得資料標頭
@@ -219,6 +247,7 @@ app.controller('chartCtrl', ($scope, $http)->
 )
 
 
+
 chartType = [
 	{
 		name: "長條圖 Bar"
@@ -245,17 +274,4 @@ chartType = [
 		name: "圓環 Donut Chart"
 		key: "donut"
 	}	
-]
-
-chapters = [
-	{
-		title: '123'
-		key: 'aaa'
-		description: 'ccc'
-	}
-	{
-		title: '234'
-		key: 'bbb'
-		description: 'ccc'
-	}
 ]

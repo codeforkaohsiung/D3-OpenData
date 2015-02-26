@@ -2131,7 +2131,7 @@ html { font-size: 100%; line-height: 1.5em; }
 .story-box .story-content { position: absolute; top: 35px; bottom: 0; left: 0; right: 0; }
 .story-box .row-item-list:before, .story-box .row-item-list:after { content: " "; display: table; }
 .story-box .row-item-list:after { clear: both; }
-.story-box .row-item-list .item-list-wrap { position: relative; height: 125px; min-width: 125px; float: left; padding: 15px; border: 1px solid rgba(255, 255, 255, 0.16); }
+.story-box .row-item-list .item-list-wrap { display: block; position: relative; height: 125px; min-width: 125px; float: left; padding: 15px; border: 1px solid rgba(255, 255, 255, 0.16); }
 .story-box .row-item-list .item-list-wrap.active { box-shadow: 0 0 0 5px #009AFF; }
 .story-box .row-item-list .item-list-wrap + .item-list-wrap { margin-left: 15px; }
 .story-box .row-item-list .item-list-header { margin-top: 0; }
