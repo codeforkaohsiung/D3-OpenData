@@ -1,10 +1,22 @@
-var app, chartType;
+var app, chapters, chartType;
 
 app = angular.module('starter', ['ui.bootstrap', 'vr.directives.slider', 'ngTouch']);
 
 app.controller('appCtrl', function($scope, $http) {});
 
-app.controller('storyCtrl', function($scope, $http) {});
+app.controller('storyCtrl', function($scope, $http) {
+  $scope.storyModel = {};
+  $scope.storyModel.showStoryBox = false;
+  $scope.showStoryBox = function(e) {
+    if ($scope.storyModel.showStoryBox === true) {
+      $scope.storyModel.showStoryBox = false;
+    } else {
+      $scope.storyModel.showStoryBox = true;
+    }
+    return console.log($scope.storyModel.showStoryBox);
+  };
+  return $scope.storyModel.chapters = chapters;
+});
 
 app.controller('chartCtrl', function($scope, $http) {
   var getGoogleChart, getJsonKey, renderChart, renderData, renderForm, resetData, resetList, sliderData, xTemp;
@@ -233,5 +245,17 @@ chartType = [
   }, {
     name: "圓環 Donut Chart",
     key: "donut"
+  }
+];
+
+chapters = [
+  {
+    title: '123',
+    key: 'aaa',
+    description: 'ccc'
+  }, {
+    title: '234',
+    key: 'bbb',
+    description: 'ccc'
   }
 ];

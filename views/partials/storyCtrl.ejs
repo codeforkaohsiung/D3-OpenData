@@ -1,17 +1,21 @@
-<div ng-controller="storyCtrl" class="story-box storyCtrl">
+<div class="story-box storyCtrl" ng-class="{ hideBox: storyModel.showStoryBox }">
 	<div class="relative">
 		<div class="story-box-hot-key">
-			<a href="#" class="btn btn-default btn-sm btn-block">
+			<a class="btn btn-default btn-sm mrs" ng-click="showStoryBox()">
 				<i class="glyphicon glyphicon-resize-full"></i>
 			</a>
-			<a href="#" class="btn btn-success btn-sm btn-block">
+			<a class="btn btn-info btn-sm mrs">
+				<i class="glyphicon glyphicon-pencil"></i>
+			</a>
+			<a class="btn btn-success btn-sm mrs">
 				<i class="glyphicon glyphicon-floppy-disk"></i>
 			</a>
 		</div>
 
-		<h2 class="story-title"><i class="glyphicon glyphicon-film"></i> 故事模式</h2>
-		<div class="story-content overflow-y">
-			<div>
+		<h3 class="story-title"><i class="glyphicon glyphicon glyphicon-blackboard"></i> 故事模式</h3>
+		<div class="story-content overflow-x">
+		
+			<!-- <div>
 				<ol class="breadcrumb">
 					<li class="active">故事模式</li>
 				</ol>
@@ -21,23 +25,23 @@
 				<a href="#" class="btn btn-lg btn-block text-left">
 					<i class="glyphicon glyphicon-facetime-video"></i> 編輯圖表故事
 				</a>
-			</div>
+			</div> -->
 
-			<hr>
+			<!-- <hr> -->
 			<!-- index -->
 
 			<div>
-				<ol class="breadcrumb">
+				<!-- <ol class="breadcrumb">
 					<li><a href="#"><i class="glyphicon glyphicon-chevron-left"></i> 故事模式</a></li>
 					<li class="active">編輯圖表故事</li>
-				</ol>
+				</ol> -->
 
 				<div class="row-item-list">
-					<ul>
-						<li class="item-list-wrap">
-							<h3 class="item-list-header">Chart 1</h3>
+					<ul class="overflow-x">
+						<li class="item-list-wrap" ng-repeat="item in storyModel.chapters">
+							<h3 class="item-list-header">{{ item.title }}</h3>
 							<div class="item-list-body">
-								<p>各行各業的平均薪資(月)</p>
+								<p>{{ item.description }}</p>
 							</div>
 							<div class="item-list-footer text-right">
 								<div class="btn-group btn-group-sm ">
@@ -47,29 +51,18 @@
 							</div>
 						</li>
 						<li class="item-list-wrap">
-							<h3 class="item-list-header">Chart 1</h3>
-							<div class="item-list-body">
-								<p>各行各業的平均薪資(月)</p>
-								
+							<div class="item-list-center text-center">
+								<a href="#" class="btn btn-lg btn-block"><i class="glyphicon glyphicon-plus"></i></a>
 							</div>
-							<div class="item-list-footer text-right">
-								<div class="btn-group btn-group-sm ">
-									<a href="#" class="btn">Remove</a>
-									<a href="#" class="btn">Edit</a>
-								</div>
-							</div>
-						</li>
-						<li class="item-list-wrap">
-							<a href="#" class="btn btn-lg btn-block"><i class="glyphicon glyphicon-plus"></i></a>
 						</li>
 					</ul>
 				</div>
 			</div>
 
-			<hr>
+			<!-- <hr> -->
 			<!-- story list -->
 
-			<div>
+			<!-- <div>
 				<ol class="breadcrumb">
 					<li><a href="#"><i class="glyphicon glyphicon-chevron-left"></i> 編輯圖表故事</a></li>
 					<li class="active">Chart 1</li>
@@ -85,7 +78,7 @@
 				<div class="text-right">
 					<a href="#" class="btn btn-primary">儲存頁面變更</a>
 				</div>
-			</div>
+			</div> -->
 
 		</div>
 	</div>

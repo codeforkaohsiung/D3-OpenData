@@ -1,48 +1,71 @@
 .story-box
-	$story-width: 320px
-	$story-title-height: 46px
+	$story-height: 200px
+	$story-title-height: 36px
+	$item-list-wrap-height: 125px
 	background-color: $gray-dark
 	position: fixed 
 	bottom: 0
 	left: 0
-	top: 0
+	right: 0
 	padding: $gutter
-	width: $story-width
+	height: $story-height
 	color: $gray-lighter
 	z-index: $zindex-storyCtrl
 	box-shadow: $z-depth-3
+	+transition(transform .15s)
 	.relative
 		width: 100%
 		height: 100%
 	.story-box-hot-key
 		position: absolute
-		right: - $gutter
-		top: $story-title-height
-		+transform(translateX(100%))
+		left: 0
+		top: -$gutter
+		+transform(translateY(- 100%))
+		+clearfix
+		a
+			float: left
+		a + a
+			margin-left: 5px
 
 	.story-title
 		color: $gray-light
 		margin-top: 0
 		height: $story-title-height
-		border-bottom: dotted 1px rgba($gray-light, .6)
+		// border-bottom: dotted 1px rgba($gray-light, .6)
 	.story-content
 		position: absolute
-		top: $story-title-height
+		top: $story-title-height - 1
 		bottom: 0
 		left: 0
 		right: 0
 
 	//story list
 	.row-item-list
+		+clearfix
 		.item-list-wrap
+			position: relative
+			height: $item-list-wrap-height
+			min-width: $item-list-wrap-height
+			float: left
 			padding: $gutter
 			border: 1px solid rgba(white, .16)
+			&.active
+				box-shadow: 0 0 0 5px $brand-primary
 			& + .item-list-wrap
-				margin-top: $gutter
+				margin-left: $gutter
 		.item-list-header
 			margin-top: 0
 		.item-list-body
 		.item-list-footer
+			position: absolute
+			bottom: $gutter
+			right: $gutter
+		.item-list-center
+			position: absolute
+			left: 0
+			right: 0
+			top: 50%
+			+transform(translateY(-50%))
 			
 
 	// bootstrap components
@@ -51,5 +74,8 @@
 		padding-left: 0
 	.form-control
 		background-color: transparent
+
+	&.hideBox
+		+transform(translateY($story-height))
 
 

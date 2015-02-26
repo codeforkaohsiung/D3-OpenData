@@ -1,27 +1,35 @@
 <% layout( '../layout' ) -%> 
-<div  ng-controller="chartCtrl">
-	<div class="text-center header-banner mbl">
-		<div class="banner-imgae"></div>
-	</div>
 
-	<div class="container-fluid container" >
-		<div class="input-group mbl">
-			<input id="getKey" type="text" ng-model="appModel.chartShkey" placeholder="Pleace type the Google Spreadsheet key" class="form-control" ng-keypress="enterChart($event, appModel.chartShkey)" >
-			<span class="input-group-btn">
-				<button id="submitGetKey" class="btn btn-danger" type="button" data-loading-text="Loading..." ng-click="loadChart(appModel.chartShkey)">開啟試算表</button>
-			</span>
-		</div>
-		<div class="section-chart index-section active in">
-			<% include ../partials/chart %>
-			<!-- chart save -->
-			
-			<% include ../partials/chartContentForm %>
-			<!-- chart save end -->
+<div ng-controller="storyCtrl">
+
+	<div ng-controller="chartCtrl">
+		<div class="text-center header-banner mbl">
+			<div class="banner-imgae"></div>
 		</div>
 
+		<div class="container-fluid container" >
+			<h2>故事模式 - </h2>
+			<div class="input-group mbl">
+				<input id="getKey" type="text" ng-model="appModel.chartShkey" placeholder="Pleace type the Google Spreadsheet key" class="form-control" ng-keypress="enterChart($event, appModel.chartShkey)" >
+				<span class="input-group-btn">
+					<button id="submitGetKey" class="btn btn-danger" type="button" data-loading-text="Loading..." ng-click="loadChart(appModel.chartShkey)">開啟試算表</button>
+				</span>
+			</div>
+			<div class="section-chart index-section active in">
+				<% include ../partials/chart %>
+				<!-- chart save -->
+				
+				<% include ../partials/chartContentForm %>
+				<!-- chart save end -->
+			</div>
+
+		</div>
+
 	</div>
+
+	<pre>
+		{{ storyModel | json }}
+	</pre>
+	<% include ../partials/storyCtrl %>
 
 </div>
-
-
-<% include ../partials/storyCtrl %>

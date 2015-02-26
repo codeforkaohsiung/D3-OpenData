@@ -1,10 +1,19 @@
 app = angular.module('starter', ['ui.bootstrap', 'vr.directives.slider', 'ngTouch']);
 
-
 app.controller('appCtrl', ($scope, $http)->
 )	
 
 app.controller('storyCtrl', ($scope, $http)->
+	$scope.storyModel = {}
+	$scope.storyModel.showStoryBox = false
+	$scope.showStoryBox = (e)->
+		if $scope.storyModel.showStoryBox is true
+			$scope.storyModel.showStoryBox = false
+		else
+			$scope.storyModel.showStoryBox = true
+		console.log $scope.storyModel.showStoryBox
+
+	$scope.storyModel.chapters = chapters
 )
 
 app.controller('chartCtrl', ($scope, $http)->
@@ -236,4 +245,17 @@ chartType = [
 		name: "圓環 Donut Chart"
 		key: "donut"
 	}	
+]
+
+chapters = [
+	{
+		title: '123'
+		key: 'aaa'
+		description: 'ccc'
+	}
+	{
+		title: '234'
+		key: 'bbb'
+		description: 'ccc'
+	}
 ]
