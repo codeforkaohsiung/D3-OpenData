@@ -7,3 +7,17 @@
 	background-repeat: no-repeat
 
 	
+
+@mixin webkitScrollbar
+	&:hover
+		&::-webkit-scrollbar-thumb
+			background-color: #777
+	&::-webkit-scrollbar
+		height: 10px
+		width: 10px
+		background-color: transparent
+	&::-webkit-scrollbar-thumb
+		background-color: rgba(#aaa,.3)
+		+border-radius(5px)
+	&::-webkit-scrollbar-track
+		background-color: transparent

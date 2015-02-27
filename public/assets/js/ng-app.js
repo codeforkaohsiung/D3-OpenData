@@ -7,55 +7,45 @@ app.controller('appCtrl', function($scope, $http) {});
 app.controller('storyCtrl', function($scope, $http) {
   var updateStoryData;
   $scope.storyModel = {};
+  $scope.appModel = {};
   $scope.storyModel.showStoryBox = false;
   $scope.showStoryBox = function(e) {
     if ($scope.storyModel.showStoryBox === true) {
-      $scope.storyModel.showStoryBox = false;
+      return $scope.storyModel.showStoryBox = false;
     } else {
-      $scope.storyModel.showStoryBox = true;
+      return $scope.storyModel.showStoryBox = true;
     }
-    return console.log($scope.storyModel.showStoryBox);
   };
   $scope.storyModel.chapters = chapters;
   $scope.storyNewChapter = function() {
-    var idTemp, nowDate;
+    var chapterTemp, idTemp, nowDate;
     nowDate = new Date();
-    idTemp = nowDate.getTime();
-    console.log(idTemp);
-    return $scope.$broadcast('storyShareAddNewChapter', idTemp);
+    idTemp = nowDate.getTime().toString();
+    chapterTemp = {};
+    chapterTemp.id = idTemp;
+    $scope.storyModel.chapters.push(chapterTemp);
+    return $scope.$broadcast('storyShareChangeChapter', idTemp);
   };
   $scope.$on('updateShareStoryData', function(event, chapterJson, id) {
-    console.log(chapterJson);
     return updateStoryData(id, chapterJson);
   });
-  updateStoryData = function(id, chapterJson) {
+  $scope.editChapter = function(id) {
+    var idTemp;
+    idTemp = id.toString();
+    return $scope.$broadcast('storyShareChangeChapter', idTemp);
+  };
+  return updateStoryData = function(id, chapterJson) {
     return angular.forEach($scope.storyModel.chapters, function(d, i) {
       if (d.id === id) {
         return $scope.storyModel.chapters[i] = chapterJson;
       }
     });
   };
-  $scope.currentChapter = function() {
-    var currentModel, currentPath;
-    currentPath = window.location.hash.substr(1);
-    currentModel = {};
-    angular.forEach($scope.storyModel.chapters, function(d, i) {
-      if (d.id === currentPath) {
-        return currentModel = $scope.storyModel.chapters[i];
-      } else {
-        return currentModel = $scope.storyModel.chapters[0];
-      }
-    });
-    console.log(currentModel, 'aa');
-    return $scope.$broadcast('storyShareCurrentChapter', currentModel);
-  };
-  return $scope.currentChapter();
 });
 
-app.controller('chartCtrl', function($scope, $http) {
-  var getGoogleChart, getJsonKey, renderChart, renderData, renderForm, resetData, resetList, sliderData, xTemp;
+app.controller('chartCtrl', function($scope, $http, $timeout) {
+  var chart, getGoogleChart, getJsonKey, renderChart, renderData, renderForm, resetList, sliderData, storyLoadChart, storyShareCurrentChapter, xTemp;
   $scope.appModel = {};
-  $scope.appModel.id = '1424934801703';
   $scope.pageStatus = {};
   $scope.pageStatus.start = false;
   resetList = ['xVal', 'xDataMin', 'xDataMax', 'jsonKey', 'xData', 'content'];
@@ -66,10 +56,10 @@ app.controller('chartCtrl', function($scope, $http) {
     }
   };
   $scope.loadChart = function(path) {
-    resetData($scope.appModel, resetList);
+    $scope.$emit('updateShareStoryData', $scope.appModel, $scope.appModel.id);
+    $scope.resetData($scope.appModel, resetList);
     $scope.appModel.chartShkey = path;
-    getGoogleChart($scope.appModel.chartShkey);
-    return $scope.$emit('updateShareStoryData', $scope.appModel, $scope.appModel.id);
+    return getGoogleChart($scope.appModel.chartShkey);
   };
   $scope.replaceGSX = function(str) {
     return str.replace('gsx$', '');
@@ -94,18 +84,54 @@ app.controller('chartCtrl', function($scope, $http) {
     }
     return renderData();
   };
-  $scope.$on('storyShareCurrentChapter', function(currentModel) {
+  storyShareCurrentChapter = function(currentModel) {
     $scope.appModel = currentModel;
-    console.log(currentModel, 'bb');
-    return $scope.loadChart($scope.appModel.chartShkey);
+    $scope.$emit('updateShareStoryData', $scope.appModel, $scope.appModel.id);
+    $scope.cleanChart();
+    return storyLoadChart();
+  };
+  storyLoadChart = function() {
+    return getGoogleChart($scope.appModel.chartShkey);
+  };
+  $scope.currentChapter = function() {
+    var checkCurrentId, currentModel, currentPath;
+    if ($scope.storyModel) {
+      currentPath = window.location.hash.substr(1);
+      currentModel = {};
+      checkCurrentId = false;
+      angular.forEach($scope.storyModel.chapters, function(d, i) {
+        if (d.id === currentPath) {
+          console.log(d, 'right');
+          currentModel = d;
+          return checkCurrentId = true;
+        }
+      });
+      if (!checkCurrentId) {
+        currentModel = $scope.storyModel.chapters[0];
+      }
+      $scope.storyModel.currentChapter = currentModel.id;
+      return storyShareCurrentChapter(currentModel);
+    }
+  };
+  $timeout(function() {
+    return $scope.currentChapter();
   });
-  resetData = function(data, resetList) {
+  $scope.$on('storyShareChangeChapter', function(event, idTemp) {
+    window.location.hash = idTemp;
+    return $scope.currentChapter();
+  });
+  $scope.chartType = chartType;
+  $scope.resetData = function(data, resetList) {
     angular.forEach(resetList, function(d) {
       return data[d] = "";
     });
     return data;
   };
-  $scope.chartType = chartType;
+  $scope.cleanChart = function() {
+    var demoChart;
+    demoChart = angular.element(document.querySelector('.demo')).html('');
+    return demoChart.html('');
+  };
   getGoogleChart = function(shkey) {
     var listKey, shCallback, shPath, url;
     shPath = 'https://spreadsheets.google.com/feeds/list/';
@@ -123,6 +149,9 @@ app.controller('chartCtrl', function($scope, $http) {
     }, function(response) {
       return console.log('Fail:', response);
     });
+    if (!$scope.appModel.chartType) {
+      $scope.appModel.chartType = $scope.chartType[0];
+    }
     return $scope.pageStatus.start = true;
   };
   getJsonKey = function(obj) {
@@ -235,8 +264,9 @@ app.controller('chartCtrl', function($scope, $http) {
     }
     return renderChart(dataset, x);
   };
+  chart = {};
   return renderChart = function(dataset, x) {
-    var chart, chartCase;
+    var chartCase;
     chartCase = $scope.appModel.chartType.key;
     return chart = c3.generate({
       bindto: ".demo",

@@ -5,52 +5,43 @@ app.controller('appCtrl', ($scope, $http)->
 
 app.controller('storyCtrl', ($scope, $http)->
 	$scope.storyModel = {}
+	$scope.appModel = {}
 	$scope.storyModel.showStoryBox = false
 	$scope.showStoryBox = (e)->
 		if $scope.storyModel.showStoryBox is true
 			$scope.storyModel.showStoryBox = false
 		else
 			$scope.storyModel.showStoryBox = true
-		console.log $scope.storyModel.showStoryBox
 
 	$scope.storyModel.chapters = chapters
-
 
 	# new chapter
 	$scope.storyNewChapter = ()->
 		nowDate = new Date()
-		idTemp = nowDate.getTime()
-		console.log idTemp
-		$scope.$broadcast 'storyShareAddNewChapter', idTemp
+		idTemp = nowDate.getTime().toString()
+		chapterTemp = {}
+		chapterTemp.id = idTemp
+		$scope.storyModel.chapters.push chapterTemp
+		$scope.$broadcast 'storyShareChangeChapter', idTemp
 
 	# save from chartCtrl SaveStoryData
 	$scope.$on 'updateShareStoryData', (event, chapterJson, id )->
-		console.log chapterJson
 		updateStoryData(id, chapterJson)
+	# edit chapter
+	$scope.editChapter = (id)->
+		idTemp = id.toString()
+		$scope.$broadcast 'storyShareChangeChapter', idTemp
+
 	# update story
 	updateStoryData = (id, chapterJson)->
 		angular.forEach $scope.storyModel.chapters, (d, i)->
 			if d.id is id
 				$scope.storyModel.chapters[i] = chapterJson
 
-	# Open current path
-	$scope.currentChapter = ()->
-		currentPath = window.location.hash.substr(1)
-		currentModel = {}
-		angular.forEach $scope.storyModel.chapters, (d, i)->
-			if d.id is currentPath
-				currentModel = $scope.storyModel.chapters[i]
-			else 
-				currentModel = $scope.storyModel.chapters[0]
-		console.log currentModel, 'aa'
-		$scope.$broadcast('storyShareCurrentChapter', currentModel)
-	
-	$scope.currentChapter()
 )
 
-app.controller('chartCtrl', ($scope, $http)->
+app.controller('chartCtrl', ($scope, $http, $timeout)->
 	$scope.appModel = {}
-	$scope.appModel.id = '1424934801703' # Temp
 	$scope.pageStatus = {}
 	$scope.pageStatus.start = false
 	resetList = ['xVal','xDataMin', 'xDataMax', 'jsonKey', 'xData', 'content']
@@ -60,10 +51,11 @@ app.controller('chartCtrl', ($scope, $http)->
 			$scope.loadChart(path)
 
 	$scope.loadChart = (path)->
-		resetData($scope.appModel, resetList) # 當使用者開啟試算表時，重置資料
+		$scope.$emit('updateShareStoryData', $scope.appModel, $scope.appModel.id)
+		$scope.resetData($scope.appModel, resetList) # 當使用者開啟試算表時，重置資料
 		$scope.appModel.chartShkey = path
 		getGoogleChart($scope.appModel.chartShkey)
-		$scope.$emit('updateShareStoryData', $scope.appModel, $scope.appModel.id)
+		
 
 	$scope.replaceGSX = (str)->
 		return str.replace('gsx$', '')
@@ -82,21 +74,54 @@ app.controller('chartCtrl', ($scope, $http)->
 			$scope.appModel.xDataMaximum = false
 		renderData()
 
-	# Story Mode
-	$scope.$on 'storyShareCurrentChapter', (currentModel)->
+	## Story Mode
+	storyShareCurrentChapter = (currentModel)->
 		$scope.appModel = currentModel
-		console.log currentModel, 'bb'
-		$scope.loadChart($scope.appModel.chartShkey)
-	# Story Mode end 
+		$scope.$emit('updateShareStoryData', $scope.appModel, $scope.appModel.id)
+		$scope.cleanChart()
+		storyLoadChart()
+	storyLoadChart = ()->
+		getGoogleChart($scope.appModel.chartShkey)
+		
 
-	# 重置資料
-	resetData = (data, resetList)->
-		angular.forEach resetList, (d)->
-			 data[d] = ""
-		data
+	# 故事模式中的讀取目前頁面
+	$scope.currentChapter = ()->
+		# $scope.resetData($scope.appModel, resetList)
+		if $scope.storyModel
+			currentPath = window.location.hash.substr(1)
+			currentModel = {}
+			checkCurrentId = false
+			angular.forEach $scope.storyModel.chapters, (d, i)->
+				if d.id is currentPath
+					console.log d, 'right'
+					currentModel = d
+					checkCurrentId = true
+			if !checkCurrentId #如果都沒有符合的
+				currentModel = $scope.storyModel.chapters[0]
+
+			$scope.storyModel.currentChapter = currentModel.id
+			storyShareCurrentChapter(currentModel)
+	$timeout( ()->
+		$scope.currentChapter()
+	)
+	# 新增頁面 或是 換頁
+	$scope.$on 'storyShareChangeChapter', (event, idTemp)->
+		window.location.hash = idTemp
+		$scope.currentChapter()
+
+	## Story Mode end 
 
 	# Chart 的類型定義
 	$scope.chartType = chartType
+
+	# 重置資料
+	$scope.resetData = (data, resetList)->
+		angular.forEach resetList, (d)->
+			 data[d] = ""
+		data
+	$scope.cleanChart = ()->
+		demoChart = angular.element(document.querySelector('.demo')).html('')
+		demoChart.html('')
 
 	# 取得資料
 	getGoogleChart = (shkey)->
@@ -116,7 +141,8 @@ app.controller('chartCtrl', ($scope, $http)->
 			, (response)->
 				console.log('Fail:', response)
 			)
-
+		if !$scope.appModel.chartType
+			$scope.appModel.chartType = $scope.chartType[0]
 		$scope.pageStatus.start = true
 
 	# 取得資料標頭
@@ -221,6 +247,7 @@ app.controller('chartCtrl', ($scope, $http)->
 
 		renderChart dataset, x
 
+	chart = {}
 	renderChart = (dataset, x)->
 		chartCase = $scope.appModel.chartType.key
 		chart = c3.generate(

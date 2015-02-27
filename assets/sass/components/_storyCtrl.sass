@@ -1,6 +1,7 @@
 .story-box
 	$story-height: 200px
-	$story-title-height: 36px
+	$story-title-height: 24px
+	$item-list-wrap-width: 175px
 	$item-list-wrap-height: 125px
 	background-color: $gray-dark
 	position: fixed 
@@ -42,18 +43,29 @@
 	//story list
 	.row-item-list
 		+clearfix
+		overflow: auto
+		overflow-y: hidden
+		height: $item-list-wrap-height + $gutter*2
+		+webkitScrollbar
+		ul
+			white-space: nowrap
+			padding: 0 $gutter
 		.item-list-wrap
-			display: block
+			display: inline-block
 			position: relative
 			height: $item-list-wrap-height
-			min-width: $item-list-wrap-height
-			float: left
+			width: $item-list-wrap-width
+			margin: $gutter
+			vertical-align: middle
 			padding: $gutter
 			border: 1px solid rgba(white, .16)
+			+background-size(cover)
+			background-repeat: no-repeat
+			background-position: center center
 			&.active
 				box-shadow: 0 0 0 5px $brand-primary
-			& + .item-list-wrap
-				margin-left: $gutter
+			// & + .item-list-wrap
+			// 	margin: $gutter
 		.item-list-header
 			margin-top: 0
 		.item-list-body

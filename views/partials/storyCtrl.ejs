@@ -12,12 +12,12 @@
 			</a>
 		</div>
 
-		<h3 class="story-title"><i class="glyphicon glyphicon glyphicon-blackboard"></i> 故事模式</h3>
-		<div class="story-content overflow-x">
+		<h4 class="story-title"><i class="glyphicon glyphicon glyphicon-blackboard"></i> 故事模式</h4>
+		<div class="story-content">
 		
 			<div class="row-item-list">
-				<ul class="overflow-x">
-					<li class="item-list-wrap" ng-repeat="item in storyModel.chapters">
+				<ul>
+					<li class="item-list-wrap" ng-repeat="item in storyModel.chapters" ng-class="{active : item.id == storyModel.currentChapter}" style="background-image: url({{item.thumbnail}})">
 						<h3 class="item-list-header">{{ item.content.chartName }}</h3>
 						<div class="item-list-body">
 							<p>{{ item.content.description }}</p>
@@ -25,13 +25,13 @@
 						<div class="item-list-footer text-right">
 							<div class="btn-group btn-group-sm ">
 								<a href="#" class="btn">Remove</a>
-								<a href="#{{item.id}}" class="btn">Edit</a>
+								<a href="#{{item.id}}" class="btn" ng-click="editChapter(item.id)">Edit</a>
 							</div>
 						</div>
 					</li>
 					<li class="item-list-wrap">
 						<div class="item-list-center text-center">
-							<a href="#" class="btn btn-lg btn-block" ng-click="storyNewChapter()"><i class="glyphicon glyphicon-plus"></i></a>
+							<a href="" class="btn btn-lg btn-block" ng-click="storyNewChapter()"><i class="glyphicon glyphicon-plus"></i></a>
 						</div>
 					</li>
 				</ul>
@@ -139,7 +139,8 @@ var chapters = 	[
       "content": {
         "chartName": "台北市",
         "description": "生育率"
-      }
+      },
+      "thumbnail": "/upload/test-img.png"
     },
     {
       "id": "2",
@@ -147,7 +148,290 @@ var chapters = 	[
       "content": {
         "chartName": "REGRasvdsvEG",
         "description": "ERGREsavsvGR"
-      }
+      },
+      "thumbnail": "/upload/test-img.png"
+    },
+    {
+      "id": "1425018863981",
+      "chartType": {
+        "name": "圓環 Donut Chart",
+        "key": "donut"
+      },
+      "xDataMin": 14,
+      "xDataMax": 23,
+      "chartShkey": "1voWnj5sG-kSJ3hQxbMuDZ3w_7m2rkHKglBomN48tSrA",
+      "xVal": {
+        "name": "gsx$年"
+      },
+      "jsonKey": [
+        {
+          "name": "gsx$年"
+        },
+        {
+          "name": "gsx$批發及零售業",
+          "dataSelect": true
+        },
+        {
+          "name": "gsx$運輸及倉儲業",
+          "dataSelect": true
+        },
+        {
+          "name": "gsx$住宿及餐飲業",
+          "dataSelect": true
+        },
+        {
+          "name": "gsx$資訊及通訊傳播業"
+        },
+        {
+          "name": "gsx$金融及保險業"
+        },
+        {
+          "name": "gsx$不動產業"
+        },
+        {
+          "name": "gsx$專業科學及技術服務業"
+        },
+        {
+          "name": "gsx$支援服務業"
+        },
+        {
+          "name": "gsx$教育服務業"
+        },
+        {
+          "name": "gsx$醫療保健服務業"
+        },
+        {
+          "name": "gsx$藝術娛樂及休閒服務業"
+        },
+        {
+          "name": "gsx$其他服務業"
+        },
+        {
+          "name": "gsx$批發業"
+        },
+        {
+          "name": "gsx$零售業"
+        },
+        {
+          "name": "gsx$鐵路大眾捷運系統運輸業"
+        },
+        {
+          "name": "gsx$海洋水運業"
+        },
+        {
+          "name": "gsx$航空運輸業"
+        },
+        {
+          "name": "gsx$港埠業"
+        },
+        {
+          "name": "gsx$郵政業"
+        },
+        {
+          "name": "gsx$住宿服務業"
+        },
+        {
+          "name": "gsx$出版業"
+        },
+        {
+          "name": "gsx$電信業"
+        },
+        {
+          "name": "gsx$電腦系統設計服務業"
+        },
+        {
+          "name": "gsx$電腦系統設計資料處理及資訊供應服務業"
+        },
+        {
+          "name": "gsx$銀行業"
+        },
+        {
+          "name": "gsx$財產保險業"
+        },
+        {
+          "name": "gsx$證券期貨及其他金融業"
+        },
+        {
+          "name": "gsx$廣告業及市場研究業"
+        },
+        {
+          "name": "gsx$專門設計服務業"
+        },
+        {
+          "name": "gsx$美髮及美容美體業"
+        }
+      ],
+      "xData": [
+        "1991",
+        "1992",
+        "1993",
+        "1994",
+        "1995",
+        "1996",
+        "1997",
+        "1998",
+        "1999",
+        "2000",
+        "2001",
+        "2002",
+        "2003",
+        "2004",
+        "2005",
+        "2006",
+        "2007",
+        "2008",
+        "2009",
+        "2010",
+        "2011",
+        "2012",
+        "2013"
+      ],
+      "content": {
+        "chartName": "世界末日啦",
+        "description": "喔喔"
+      },
+      "thumbnail": "/upload/test-img.png"
+    },
+    {
+      "id": "142501885563981",
+      "chartType": {
+        "name": "圓環 Donut Chart",
+        "key": "donut"
+      },
+      "xDataMin": 14,
+      "xDataMax": 23,
+      "chartShkey": "1voWnj5sG-kSJ3hQxbMuDZ3w_7m2rkHKglBomN48tSrA",
+      "xVal": {
+        "name": "gsx$年"
+      },
+      "jsonKey": [
+        {
+          "name": "gsx$年"
+        },
+        {
+          "name": "gsx$批發及零售業",
+          "dataSelect": true
+        },
+        {
+          "name": "gsx$運輸及倉儲業",
+          "dataSelect": true
+        },
+        {
+          "name": "gsx$住宿及餐飲業",
+          "dataSelect": true
+        },
+        {
+          "name": "gsx$資訊及通訊傳播業"
+        },
+        {
+          "name": "gsx$金融及保險業"
+        },
+        {
+          "name": "gsx$不動產業"
+        },
+        {
+          "name": "gsx$專業科學及技術服務業"
+        },
+        {
+          "name": "gsx$支援服務業"
+        },
+        {
+          "name": "gsx$教育服務業"
+        },
+        {
+          "name": "gsx$醫療保健服務業"
+        },
+        {
+          "name": "gsx$藝術娛樂及休閒服務業"
+        },
+        {
+          "name": "gsx$其他服務業"
+        },
+        {
+          "name": "gsx$批發業"
+        },
+        {
+          "name": "gsx$零售業"
+        },
+        {
+          "name": "gsx$鐵路大眾捷運系統運輸業"
+        },
+        {
+          "name": "gsx$海洋水運業"
+        },
+        {
+          "name": "gsx$航空運輸業"
+        },
+        {
+          "name": "gsx$港埠業"
+        },
+        {
+          "name": "gsx$郵政業"
+        },
+        {
+          "name": "gsx$住宿服務業"
+        },
+        {
+          "name": "gsx$出版業"
+        },
+        {
+          "name": "gsx$電信業"
+        },
+        {
+          "name": "gsx$電腦系統設計服務業"
+        },
+        {
+          "name": "gsx$電腦系統設計資料處理及資訊供應服務業"
+        },
+        {
+          "name": "gsx$銀行業"
+        },
+        {
+          "name": "gsx$財產保險業"
+        },
+        {
+          "name": "gsx$證券期貨及其他金融業"
+        },
+        {
+          "name": "gsx$廣告業及市場研究業"
+        },
+        {
+          "name": "gsx$專門設計服務業"
+        },
+        {
+          "name": "gsx$美髮及美容美體業"
+        }
+      ],
+      "xData": [
+        "1991",
+        "1992",
+        "1993",
+        "1994",
+        "1995",
+        "1996",
+        "1997",
+        "1998",
+        "1999",
+        "2000",
+        "2001",
+        "2002",
+        "2003",
+        "2004",
+        "2005",
+        "2006",
+        "2007",
+        "2008",
+        "2009",
+        "2010",
+        "2011",
+        "2012",
+        "2013"
+      ],
+      "content": {
+        "chartName": "世界末日啦222",
+        "description": "喔喔2"
+      },
+      "thumbnail": "/upload/test-img.png"
     }
   ]
 </script>
