@@ -4,45 +4,6 @@ app = angular.module('starter', ['ui.bootstrap', 'vr.directives.slider', 'ngTouc
 
 app.controller('appCtrl', function($scope, $http) {});
 
-app.controller('storyCtrl', function($scope, $http) {
-  var updateStoryData;
-  $scope.storyModel = {};
-  $scope.appModel = {};
-  $scope.storyModel.showStoryBox = false;
-  $scope.showStoryBox = function(e) {
-    if ($scope.storyModel.showStoryBox === true) {
-      return $scope.storyModel.showStoryBox = false;
-    } else {
-      return $scope.storyModel.showStoryBox = true;
-    }
-  };
-  $scope.storyModel.chapters = chapters;
-  $scope.storyNewChapter = function() {
-    var chapterTemp, idTemp, nowDate;
-    nowDate = new Date();
-    idTemp = nowDate.getTime().toString();
-    chapterTemp = {};
-    chapterTemp.id = idTemp;
-    $scope.storyModel.chapters.push(chapterTemp);
-    return $scope.$broadcast('storyShareChangeChapter', idTemp);
-  };
-  $scope.$on('updateShareStoryData', function(event, chapterJson, id) {
-    return updateStoryData(id, chapterJson);
-  });
-  $scope.editChapter = function(id) {
-    var idTemp;
-    idTemp = id.toString();
-    return $scope.$broadcast('storyShareChangeChapter', idTemp);
-  };
-  return updateStoryData = function(id, chapterJson) {
-    return angular.forEach($scope.storyModel.chapters, function(d, i) {
-      if (d.id === id) {
-        return $scope.storyModel.chapters[i] = chapterJson;
-      }
-    });
-  };
-});
-
 app.controller('chartCtrl', function($scope, $http, $timeout) {
   var chart, getGoogleChart, getJsonKey, renderChart, renderData, renderForm, resetList, sliderData, storyLoadChart, storyShareCurrentChapter, xTemp;
   $scope.appModel = {};
@@ -318,3 +279,58 @@ chartType = [
     key: "donut"
   }
 ];
+
+app.controller('storyCtrl', function($scope, $http, $modal, $log) {
+  var updateStoryData;
+  $scope.storyModel = {};
+  $scope.appModel = {};
+  $scope.storyModel.showStoryBox = false;
+  $scope.showStoryBox = function(e) {
+    if ($scope.storyModel.showStoryBox === true) {
+      return $scope.storyModel.showStoryBox = false;
+    } else {
+      return $scope.storyModel.showStoryBox = true;
+    }
+  };
+  $scope.storyModel.chapters = chapters;
+  $scope.storyNewChapter = function() {
+    var chapterTemp, idTemp, nowDate;
+    nowDate = new Date();
+    idTemp = nowDate.getTime().toString();
+    chapterTemp = {};
+    chapterTemp.id = idTemp;
+    $scope.storyModel.chapters.push(chapterTemp);
+    return $scope.$broadcast('storyShareChangeChapter', idTemp);
+  };
+  $scope.$on('updateShareStoryData', function(event, chapterJson, id) {
+    return updateStoryData(id, chapterJson);
+  });
+  $scope.editChapter = function(id) {
+    var idTemp;
+    idTemp = id.toString();
+    return $scope.$broadcast('storyShareChangeChapter', idTemp);
+  };
+  updateStoryData = function(id, chapterJson) {
+    return angular.forEach($scope.storyModel.chapters, function(d, i) {
+      if (d.id === id) {
+        return $scope.storyModel.chapters[i] = chapterJson;
+      }
+    });
+  };
+  return $scope.openStoryModal = function() {
+    var modalInstance;
+    return modalInstance = $modal.open({
+      templateUrl: 'modalStoryContent.html',
+      controller: 'storyModalInstanceCtrl'
+    });
+  };
+});
+
+app.controller('storyModalInstanceCtrl', function($scope, $modalInstance) {
+  $scope.ok = function() {
+    return $modalInstance.close();
+  };
+  return $scope.cancel = function() {
+    return $modalInstance.dismiss('cancel');
+  };
+});
