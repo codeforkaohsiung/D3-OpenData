@@ -11,6 +11,7 @@ app.controller('storyCtrl', ($scope, $http, $modal, $log)->
 			$scope.storyModel.showStoryBox = true
 
 	$scope.storyModel.chapters = chapters
+	
 
 	# new chapter
 	$scope.storyNewChapter = ()->

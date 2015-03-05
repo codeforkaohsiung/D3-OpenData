@@ -9,6 +9,7 @@ app.controller('chartCtrl', function($scope, $http, $timeout) {
   $scope.appModel = {};
   $scope.pageStatus = {};
   $scope.pageStatus.start = false;
+  $scope.pageStatus.chartPathActive = false;
   resetList = ['xVal', 'xDataMin', 'xDataMax', 'jsonKey', 'xData', 'content'];
   $scope.appModel.chartShkey = '1x6C86tzJ2F8ZTau6g7uUNxSb496wuoIR2s2I9lEWQSI';
   $scope.enterChart = function(keyEvent, path) {
@@ -106,6 +107,7 @@ app.controller('chartCtrl', function($scope, $http, $timeout) {
       $scope.dataRemote = data.data.feed.entry;
       $scope.appModel.jsonKey = getJsonKey($scope.dataRemote);
       $scope.appModel.xVal = $scope.appModel.jsonKey[0];
+      $scope.pageStatus.chartPathActive = true;
       return renderForm();
     }, function(response) {
       return console.log('Fail:', response);

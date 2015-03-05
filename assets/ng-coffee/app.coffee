@@ -9,6 +9,7 @@ app.controller('chartCtrl', ($scope, $http, $timeout)->
 	$scope.appModel = {}
 	$scope.pageStatus = {}
 	$scope.pageStatus.start = false
+	$scope.pageStatus.chartPathActive = false
 	resetList = ['xVal','xDataMin', 'xDataMax', 'jsonKey', 'xData', 'content']
 	$scope.appModel.chartShkey = '1x6C86tzJ2F8ZTau6g7uUNxSb496wuoIR2s2I9lEWQSI'
 	$scope.enterChart = (keyEvent, path)-> # 鍵盤事件
@@ -102,6 +103,7 @@ app.controller('chartCtrl', ($scope, $http, $timeout)->
 				$scope.dataRemote = data.data.feed.entry
 				$scope.appModel.jsonKey = getJsonKey($scope.dataRemote) #取得資料標頭
 				$scope.appModel.xVal = $scope.appModel.jsonKey[0] #預設xVal
+				$scope.pageStatus.chartPathActive = true
 				renderForm()
 			, (response)->
 				console.log('Fail:', response)

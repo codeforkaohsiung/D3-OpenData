@@ -17,6 +17,13 @@ exports.storyEditor = function(req, res) {
         ogImage: ''
     });
 };
+exports.storyEditor = function(req, res) {
+    res.render('pages/storyReader',{
+        ogheadTitle: '故事模式',
+        ogdescription: '',
+        ogImage: ''
+    });
+};
 exports.doc = function(req, res) {
     res.render('pages/doc',{
         ogheadTitle: '使用教學',
@@ -33,7 +40,6 @@ exports.showcase = function(req, res) {
               ogImage: ''
         });
     });
-    
 };
 // exports.demopage = function(req, res) {
 //     res.render('pages/demopage', {

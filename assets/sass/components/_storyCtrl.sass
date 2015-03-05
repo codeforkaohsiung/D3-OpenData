@@ -1,15 +1,15 @@
 .story-box
-	$story-height: 200px
+	$story-width: 150px
 	$story-title-height: 24px
-	$item-list-wrap-width: 175px
-	$item-list-wrap-height: 125px
+	$item-list-wrap-width: $story-width - 15px
+	$item-list-wrap-height: 85px
 	background-color: $gray-dark
 	position: fixed 
 	bottom: 0
 	left: 0
-	right: 0
-	padding: $gutter
-	height: $story-height
+	top: 0
+	padding: $gutter 0 $gutter $gutter
+	width: $story-width
 	color: $gray-lighter
 	z-index: $zindex-storyCtrl
 	box-shadow: $z-depth-3
@@ -19,14 +19,15 @@
 		height: 100%
 	.story-box-hot-key
 		position: absolute
-		left: 0
-		top: -$gutter
-		+transform(translateY(- 100%))
+		bottom: $gutter
+		right: 0
+		+transform(translateX(100%))
 		+clearfix
 		a
-			float: left
+			// float: left
+			display: block
 		a + a
-			margin-left: 5px
+			margin-top: 5px
 
 	.story-title
 		color: $gray-light
@@ -43,42 +44,49 @@
 	//story list
 	.row-item-list
 		+clearfix
-		overflow: auto
-		overflow-y: hidden
-		height: $item-list-wrap-height + $gutter*2
+		overflow-y: auto
+		position: absolute
+		top: 0
+		bottom: 0
+		left: 0
+		right: 0
 		+webkitScrollbar
 		ul
-			white-space: nowrap
-			padding: 0 $gutter
+			list-style-type: none
+			padding: 0
+			margin: 0
+			overflow: hidden
 		.item-list-wrap
-			display: inline-block
 			position: relative
 			height: $item-list-wrap-height
-			width: $item-list-wrap-width
-			margin: $gutter
+			width: $item-list-wrap-width - $gutter
 			vertical-align: middle
 			padding: $gutter
-			border: 1px solid rgba(white, .16)
+			// border: 1px solid rgba(white, .16)
 			+background-size(cover)
+			background-color: $gray-light
 			background-repeat: no-repeat
 			background-position: center center
 			&.active
-				box-shadow: 0 0 0 5px $brand-primary
+				box-shadow: 0 0 0 5px $brand-primary inset
+			& + .item-list-wrap
+				margin-top: $gutter/2
 			// & + .item-list-wrap
 			// 	margin: $gutter
 		.item-list-header
 			margin-top: 0
 		.item-list-body
 		.item-list-footer
-			position: absolute
-			bottom: $gutter
-			right: $gutter
+			// position: absolute
+			// bottom: $gutter
+			// right: $gutter
 		.item-list-center
 			position: absolute
 			left: 0
 			right: 0
 			top: 50%
 			+transform(translateY(-50%))
+
 			
 
 	// bootstrap components
@@ -89,6 +97,6 @@
 		background-color: transparent
 
 	&.hideBox
-		+transform(translateY($story-height))
+		+transform(translateX(- $story-width))
 
 

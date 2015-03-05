@@ -1,32 +1,34 @@
 <div class="story-box storyCtrl" ng-class="{ hideBox: storyModel.showStoryBox }">
 	<div class="relative">
 		<div class="story-box-hot-key">
-			<a class="btn btn-default btn-sm mrs" ng-click="showStoryBox()">
+			<a class="btn btn-default btn-sm" ng-click="showStoryBox()">
 				<i class="glyphicon glyphicon-resize-full"></i>
 			</a>
-			<a class="btn btn-info btn-sm mrs" ng-click="openStoryModal()">
+			<a class="btn btn-info btn-sm" ng-click="openStoryModal()">
 				<i class="glyphicon glyphicon-pencil"></i>
 			</a>
-			<a class="btn btn-success btn-sm mrs">
+			<a class="btn btn-success btn-sm">
 				<i class="glyphicon glyphicon-floppy-disk"></i>
 			</a>
 		</div>
 
-		<h4 class="story-title"><i class="glyphicon glyphicon glyphicon-blackboard"></i> 故事模式</h4>
+		<h4 class="story-title">故事模式</h4>
 		<div class="story-content">
 		
 			<div class="row-item-list">
 				<ul>
 					<li class="item-list-wrap" ng-repeat="item in storyModel.chapters" ng-class="{active : item.id == storyModel.currentChapter}" style="background-image: url({{item.thumbnail}})">
-						<h3 class="item-list-header">{{ item.content.chartName }}</h3>
+						<!-- <h4 class="item-list-header">
+              {{ item.content.chartName }}
+            </h4>
 						<div class="item-list-body">
 							<p>{{ item.content.description }}</p>
-						</div>
-						<div class="item-list-footer text-right">
-							<div class="btn-group btn-group-sm ">
+						</div> -->
+						<div class="item-list-footer text-center">
+							<!-- <div class="btn-group btn-group-sm "> -->
+                <a href="#{{item.id}}" class="btn" ng-click="editChapter(item.id)">Edit</a>
 								<a href="#" class="btn">Remove</a>
-								<a href="#{{item.id}}" class="btn" ng-click="editChapter(item.id)">Edit</a>
-							</div>
+							<!-- </div> -->
 						</div>
 					</li>
 					<li class="item-list-wrap">
@@ -41,33 +43,35 @@
 		</div>
 	</div>
 </div>
+
 <script type="text/ng-template" id="modalStoryContent.html">
   <div class="modal-header">
-    <h3 class="modal-title">Im a modal!</h3>
+    <h3 class="modal-title"><input class="form-control" value="一篇圖表故事"></h3>
   </div>
   <div class="modal-body">
     
   </div>
   <div class="modal-footer">
-      <button class="btn btn-primary" ng-click="ok()">OK</button>
-      <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-outline-default" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-primary" ng-click="ok()">OK</button>
+      
   </div>
 </script>
 
 <script>
-var chapters = 	[
+var chapters = [
     {
-      "id": "1424934801703",
-      "chartShkey": "1x6C86tzJ2F8ZTau6g7uUNxSb496wuoIR2s2I9lEWQSI",
+      "id": "1425520519329",
       "chartType": {
         "name": "折線圖 Line",
         "key": "line"
       },
+      "xDataMin": 0,
+      "xDataMax": 22,
+      "chartShkey": "1x6C86tzJ2F8ZTau6g7uUNxSb496wuoIR2s2I9lEWQSI",
       "xVal": {
         "name": "gsx$時間"
       },
-      "xDataMin": 9,
-      "xDataMax": 22,
       "jsonKey": [
         {
           "name": "gsx$時間"
@@ -149,301 +153,306 @@ var chapters = 	[
         "102年"
       ],
       "content": {
-        "chartName": "台北市",
-        "description": "生育率"
-      },
-      "thumbnail": "/upload/test-img.png"
+        "chartName": "81 - 102年 人口統計表",
+        "description": "從民國81年到102年，除了新北市人口大量成長外，台北與新北市大多維持持平的狀態。"
+      }
     },
     {
-      "id": "2",
-      "key": "bbb",
-      "content": {
-        "chartName": "REGRasvdsvEG",
-        "description": "ERGREsavsvGR"
-      },
-      "thumbnail": "/upload/test-img.png"
-    },
-    {
-      "id": "1425018863981",
+      "id": "1425520752332",
       "chartType": {
-        "name": "圓環 Donut Chart",
-        "key": "donut"
+        "name": "折線圖 Line",
+        "key": "line"
       },
-      "xDataMin": 14,
-      "xDataMax": 23,
-      "chartShkey": "1voWnj5sG-kSJ3hQxbMuDZ3w_7m2rkHKglBomN48tSrA",
+      "xDataMin": 0,
+      "xDataMax": 22,
+      "chartShkey": "1x6C86tzJ2F8ZTau6g7uUNxSb496wuoIR2s2I9lEWQSI",
       "xVal": {
-        "name": "gsx$年"
+        "name": "gsx$時間"
       },
       "jsonKey": [
         {
-          "name": "gsx$年"
+          "name": "gsx$時間"
         },
         {
-          "name": "gsx$批發及零售業",
+          "name": "gsx$區域別總計總計"
+        },
+        {
+          "name": "gsx$新北市總計",
+          "dataSelect": false
+        },
+        {
+          "name": "gsx$臺北市總計"
+        },
+        {
+          "name": "gsx$高雄市總計"
+        },
+        {
+          "name": "gsx$區域別總計幼兒人口"
+        },
+        {
+          "name": "gsx$新北市幼兒人口",
+          "dataSelect": false
+        },
+        {
+          "name": "gsx$臺北市幼兒人口",
           "dataSelect": true
         },
         {
-          "name": "gsx$運輸及倉儲業",
+          "name": "gsx$高雄市幼兒人口"
+        },
+        {
+          "name": "gsx$區域別總計工作人口"
+        },
+        {
+          "name": "gsx$新北市工作人口",
+          "dataSelect": false
+        },
+        {
+          "name": "gsx$臺北市工作人口",
           "dataSelect": true
         },
         {
-          "name": "gsx$住宿及餐飲業",
+          "name": "gsx$高雄市工作人口"
+        },
+        {
+          "name": "gsx$區域別總計老年人口"
+        },
+        {
+          "name": "gsx$新北市老年人口",
+          "dataSelect": false
+        },
+        {
+          "name": "gsx$臺北市老年人口",
           "dataSelect": true
         },
         {
-          "name": "gsx$資訊及通訊傳播業"
-        },
-        {
-          "name": "gsx$金融及保險業"
-        },
-        {
-          "name": "gsx$不動產業"
-        },
-        {
-          "name": "gsx$專業科學及技術服務業"
-        },
-        {
-          "name": "gsx$支援服務業"
-        },
-        {
-          "name": "gsx$教育服務業"
-        },
-        {
-          "name": "gsx$醫療保健服務業"
-        },
-        {
-          "name": "gsx$藝術娛樂及休閒服務業"
-        },
-        {
-          "name": "gsx$其他服務業"
-        },
-        {
-          "name": "gsx$批發業"
-        },
-        {
-          "name": "gsx$零售業"
-        },
-        {
-          "name": "gsx$鐵路大眾捷運系統運輸業"
-        },
-        {
-          "name": "gsx$海洋水運業"
-        },
-        {
-          "name": "gsx$航空運輸業"
-        },
-        {
-          "name": "gsx$港埠業"
-        },
-        {
-          "name": "gsx$郵政業"
-        },
-        {
-          "name": "gsx$住宿服務業"
-        },
-        {
-          "name": "gsx$出版業"
-        },
-        {
-          "name": "gsx$電信業"
-        },
-        {
-          "name": "gsx$電腦系統設計服務業"
-        },
-        {
-          "name": "gsx$電腦系統設計資料處理及資訊供應服務業"
-        },
-        {
-          "name": "gsx$銀行業"
-        },
-        {
-          "name": "gsx$財產保險業"
-        },
-        {
-          "name": "gsx$證券期貨及其他金融業"
-        },
-        {
-          "name": "gsx$廣告業及市場研究業"
-        },
-        {
-          "name": "gsx$專門設計服務業"
-        },
-        {
-          "name": "gsx$美髮及美容美體業"
+          "name": "gsx$高雄市老年人口"
         }
       ],
       "xData": [
-        "1991",
-        "1992",
-        "1993",
-        "1994",
-        "1995",
-        "1996",
-        "1997",
-        "1998",
-        "1999",
-        "2000",
-        "2001",
-        "2002",
-        "2003",
-        "2004",
-        "2005",
-        "2006",
-        "2007",
-        "2008",
-        "2009",
-        "2010",
-        "2011",
-        "2012",
-        "2013"
+        "81年",
+        "82年",
+        "83年",
+        "84年",
+        "85年",
+        "86年",
+        "87年",
+        "88年",
+        "89年",
+        "90年",
+        "91年",
+        "92年",
+        "93年",
+        "94年",
+        "95年",
+        "96年",
+        "97年",
+        "98年",
+        "99年",
+        "100年",
+        "101年",
+        "102年"
       ],
       "content": {
-        "chartName": "世界末日啦",
-        "description": "喔喔"
-      },
-      "thumbnail": "/upload/test-img.png"
+        "chartName": "人口結構",
+        "description": "就以台北市為例，幼兒人口不斷的減少，但總人口數變化是不大的；\n而這樣維持長時間的人口數不變，主因是死亡率降低。"
+      }
     },
     {
-      "id": "142501885563981",
+      "id": "1425521013780",
       "chartType": {
-        "name": "圓環 Donut Chart",
-        "key": "donut"
+        "name": "面積圖 Area Spline",
+        "key": "area-spline"
       },
-      "xDataMin": 14,
-      "xDataMax": 23,
-      "chartShkey": "1voWnj5sG-kSJ3hQxbMuDZ3w_7m2rkHKglBomN48tSrA",
+      "xDataMin": 0,
+      "xDataMax": 22,
+      "chartShkey": "1x6C86tzJ2F8ZTau6g7uUNxSb496wuoIR2s2I9lEWQSI",
       "xVal": {
-        "name": "gsx$年"
+        "name": "gsx$時間"
       },
       "jsonKey": [
         {
-          "name": "gsx$年"
+          "name": "gsx$時間"
         },
         {
-          "name": "gsx$批發及零售業",
+          "name": "gsx$區域別總計總計"
+        },
+        {
+          "name": "gsx$新北市總計"
+        },
+        {
+          "name": "gsx$臺北市總計"
+        },
+        {
+          "name": "gsx$高雄市總計"
+        },
+        {
+          "name": "gsx$區域別總計幼兒人口"
+        },
+        {
+          "name": "gsx$新北市幼兒人口"
+        },
+        {
+          "name": "gsx$臺北市幼兒人口",
           "dataSelect": true
         },
         {
-          "name": "gsx$運輸及倉儲業",
+          "name": "gsx$高雄市幼兒人口"
+        },
+        {
+          "name": "gsx$區域別總計工作人口"
+        },
+        {
+          "name": "gsx$新北市工作人口",
+          "dataSelect": false
+        },
+        {
+          "name": "gsx$臺北市工作人口"
+        },
+        {
+          "name": "gsx$高雄市工作人口"
+        },
+        {
+          "name": "gsx$區域別總計老年人口"
+        },
+        {
+          "name": "gsx$新北市老年人口"
+        },
+        {
+          "name": "gsx$臺北市老年人口",
           "dataSelect": true
         },
         {
-          "name": "gsx$住宿及餐飲業",
-          "dataSelect": true
-        },
-        {
-          "name": "gsx$資訊及通訊傳播業"
-        },
-        {
-          "name": "gsx$金融及保險業"
-        },
-        {
-          "name": "gsx$不動產業"
-        },
-        {
-          "name": "gsx$專業科學及技術服務業"
-        },
-        {
-          "name": "gsx$支援服務業"
-        },
-        {
-          "name": "gsx$教育服務業"
-        },
-        {
-          "name": "gsx$醫療保健服務業"
-        },
-        {
-          "name": "gsx$藝術娛樂及休閒服務業"
-        },
-        {
-          "name": "gsx$其他服務業"
-        },
-        {
-          "name": "gsx$批發業"
-        },
-        {
-          "name": "gsx$零售業"
-        },
-        {
-          "name": "gsx$鐵路大眾捷運系統運輸業"
-        },
-        {
-          "name": "gsx$海洋水運業"
-        },
-        {
-          "name": "gsx$航空運輸業"
-        },
-        {
-          "name": "gsx$港埠業"
-        },
-        {
-          "name": "gsx$郵政業"
-        },
-        {
-          "name": "gsx$住宿服務業"
-        },
-        {
-          "name": "gsx$出版業"
-        },
-        {
-          "name": "gsx$電信業"
-        },
-        {
-          "name": "gsx$電腦系統設計服務業"
-        },
-        {
-          "name": "gsx$電腦系統設計資料處理及資訊供應服務業"
-        },
-        {
-          "name": "gsx$銀行業"
-        },
-        {
-          "name": "gsx$財產保險業"
-        },
-        {
-          "name": "gsx$證券期貨及其他金融業"
-        },
-        {
-          "name": "gsx$廣告業及市場研究業"
-        },
-        {
-          "name": "gsx$專門設計服務業"
-        },
-        {
-          "name": "gsx$美髮及美容美體業"
+          "name": "gsx$高雄市老年人口"
         }
       ],
       "xData": [
-        "1991",
-        "1992",
-        "1993",
-        "1994",
-        "1995",
-        "1996",
-        "1997",
-        "1998",
-        "1999",
-        "2000",
-        "2001",
-        "2002",
-        "2003",
-        "2004",
-        "2005",
-        "2006",
-        "2007",
-        "2008",
-        "2009",
-        "2010",
-        "2011",
-        "2012",
-        "2013"
+        "81年",
+        "82年",
+        "83年",
+        "84年",
+        "85年",
+        "86年",
+        "87年",
+        "88年",
+        "89年",
+        "90年",
+        "91年",
+        "92年",
+        "93年",
+        "94年",
+        "95年",
+        "96年",
+        "97年",
+        "98年",
+        "99年",
+        "100年",
+        "101年",
+        "102年"
       ],
       "content": {
-        "chartName": "世界末日啦222",
-        "description": "喔喔2"
+        "chartName": "人口老化",
+        "description": "再這樣長時間的變化下，我們可以觀察到老年人口與幼兒人口越來越接近，維持這樣的曲線，幼兒人口將會低於老年人口。"
+      }
+    },
+    {
+      "id": "1425521155130",
+      "chartType": {
+        "name": "圓餅圖 Pie Chart",
+        "key": "pie"
       },
-      "thumbnail": "/upload/test-img.png"
+      "xDataMin": 21,
+      "xDataMax": 22,
+      "chartShkey": "1x6C86tzJ2F8ZTau6g7uUNxSb496wuoIR2s2I9lEWQSI",
+      "xVal": {
+        "name": "gsx$時間"
+      },
+      "jsonKey": [
+        {
+          "name": "gsx$時間"
+        },
+        {
+          "name": "gsx$區域別總計總計"
+        },
+        {
+          "name": "gsx$新北市總計"
+        },
+        {
+          "name": "gsx$臺北市總計"
+        },
+        {
+          "name": "gsx$高雄市總計"
+        },
+        {
+          "name": "gsx$區域別總計幼兒人口"
+        },
+        {
+          "name": "gsx$新北市幼兒人口"
+        },
+        {
+          "name": "gsx$臺北市幼兒人口",
+          "dataSelect": true
+        },
+        {
+          "name": "gsx$高雄市幼兒人口"
+        },
+        {
+          "name": "gsx$區域別總計工作人口"
+        },
+        {
+          "name": "gsx$新北市工作人口"
+        },
+        {
+          "name": "gsx$臺北市工作人口",
+          "dataSelect": true
+        },
+        {
+          "name": "gsx$高雄市工作人口"
+        },
+        {
+          "name": "gsx$區域別總計老年人口"
+        },
+        {
+          "name": "gsx$新北市老年人口"
+        },
+        {
+          "name": "gsx$臺北市老年人口",
+          "dataSelect": true
+        },
+        {
+          "name": "gsx$高雄市老年人口"
+        }
+      ],
+      "xData": [
+        "81年",
+        "82年",
+        "83年",
+        "84年",
+        "85年",
+        "86年",
+        "87年",
+        "88年",
+        "89年",
+        "90年",
+        "91年",
+        "92年",
+        "93年",
+        "94年",
+        "95年",
+        "96年",
+        "97年",
+        "98年",
+        "99年",
+        "100年",
+        "101年",
+        "102年"
+      ],
+      "content": {
+        "chartName": "102 年台北市人口結構",
+        "description": "在102年時的人口結構，台北市幼兒人口與老年人口相當接近。"
+      },
+      "singlePoint": true,
+      "xDataMaximum": false
     }
   ]
 </script>
