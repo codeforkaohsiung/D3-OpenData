@@ -17,9 +17,9 @@ exports.storyEditor = function(req, res) {
         ogImage: ''
     });
 };
-exports.storyEditor = function(req, res) {
+exports.storyReader = function(req, res) {
     res.render('pages/storyReader',{
-        ogheadTitle: '故事模式',
+        ogheadTitle: '故事閱讀',
         ogdescription: '',
         ogImage: ''
     });

@@ -444,6 +444,8 @@ a { cursor: pointer; }
 
 .inline-block { display: inline-block; }
 
+.c3.demo { min-height: 480px; }
+
 .relative { position: relative; }
 
 .mb0 { margin-bottom: 0 !important; }

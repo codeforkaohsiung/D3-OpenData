@@ -1,0 +1,71 @@
+
+<div id="errorMessage" class="hidden alert alert-danger">
+	很抱歉，連接不上Google 試算表，可能是運氣不好，或者參考一下文件看看發生了什麼問題。
+</div>
+
+
+
+
+<div id="form" class="chartTool-nav row mbm">
+	<div class="col-sm-12 hide" >
+		<div class="input-group mtl mbl">
+			<input id="getKey" type="text" ng-model="appModel.chartShkey" placeholder="Pleace type the Google Spreadsheet key" class="form-control" ng-keypress="enterChart($event, appModel.chartShkey)" >
+			<span class="input-group-btn">
+				<button id="submitGetKey" class="btn btn-danger" type="button" data-loading-text="Loading..." ng-click="loadChart(appModel.chartShkey)">開啟試算表</button>
+			</span>
+		</div>
+	</div>
+</div>
+
+
+<div class="row">
+	<div class="col-sm-12 text-center">
+		<nav>
+			<ul class="pagination">
+				<li ng-repeat="(key, item) in storyModel.chapters" ng-class="{active : item.id == storyModel.currentChapter}"><a href="#{{item.id}}" ng-click="editChapter(item.id)" >{{ key + 1 }}</a></li>
+			</ul>
+		</nav>
+	</div>
+</div>
+<div class="row mbl">
+	<div class="pd-m">
+		<div class="col-sm-12 col-lg-9">
+			<div class="demo">
+			</div>
+		</div>
+		<div class="col-sm-12 col-lg-3">
+			<h2>{{ appModel.content.chartName }}</h2>
+			<div class="mts mbm">{{ appModel.content.description }}</div>
+			<table class="table">
+				<tr>
+					<th>圖表類型</th>
+					<td>{{ appModel.chartType.name }}</td>
+				</tr>
+				<tr>
+					<th>X 軸</th>
+					<td>{{ appModel.xVal.name }}</td>
+				</tr>
+				<tr>
+					<th>資料範圍</th>
+					<td>{{appModel.xData[appModel.xDataMin]}} ~ 
+					{{appModel.xData[(appModel.xDataMax - 1)]}}</td>
+				</tr>
+				<tr>
+					<th>選取資料</th>
+					<td>
+						<ul class="list-unstyled">
+							<li ng-repeat="item in appModel.jsonKey" ng-if="item.dataSelect">
+								{{ item.name }}
+							</li>
+						</ul>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+
+
+
+
+
