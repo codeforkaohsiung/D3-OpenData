@@ -5,7 +5,7 @@ app = angular.module('starter', ['ui.bootstrap', 'vr.directives.slider', 'ngTouc
 app.controller('appCtrl', function($scope, $http) {});
 
 app.controller('chartCtrl', function($scope, $http, $timeout) {
-  var chart, getGoogleChart, getJsonKey, renderChart, renderData, renderForm, resetList, sliderData, storyLoadChart, storyShareCurrentChapter, xTemp;
+  var chart, getGoogleChart, getJsonKey, inlineAllStyles, makeStyleObject, renderChart, renderData, renderForm, resetList, sliderData, storyLoadChart, storyShareCurrentChapter, xTemp;
   $scope.appModel = {};
   $scope.pageStatus = {};
   $scope.pageStatus.start = false;
@@ -258,26 +258,69 @@ app.controller('chartCtrl', function($scope, $http, $timeout) {
       }
     });
   };
-  return $scope.updateImage = function() {
-    return html2canvas(document.getElementById('demoChart'), {
-      onrendered: function(canvas) {
-        d3.selectAll("svg text").style({
-          'font-size': '12px'
-        });
-        d3.selectAll(".c3-axis path").style({
-          'fill': 'none',
-          'stroke': '#000'
-        });
-        d3.selectAll(".c3-chart-arc path").style({
-          'stroke': '#FFFFFF'
-        });
-        d3.selectAll(".c3-chart-arc text").style({
-          'fill': '#FFFFFF'
-        });
-        console.log(canvas.toDataURL("png"), 'aa');
-        return d3.select('#chartImg').attr('src', canvas.toDataURL("png"));
-      }
+  $scope.updateImage = function() {
+    var canvas, canvasContext, svg;
+    $("defs").remove();
+    inlineAllStyles();
+    canvas = document.getElementById('canvas');
+    canvas.width = parseInt(d3.select(".demo").style('width'));
+    canvas.height = parseInt(d3.select(".demo").style('height'));
+    canvasContext = canvas.getContext("2d");
+    svg = document.querySelector(".demo > svg").outerHTML;
+    canvasContext.drawSvg(svg, 0, 0);
+    d3.select("#downloadImg").attr("href", canvas.toDataURL("png")).attr("download", function() {
+      return "_llamacharts.png";
     });
+    return d3.select("#chartImg").attr('src', canvas.toDataURL("png"));
+  };
+  inlineAllStyles = function() {
+    var changeToDisplay, chartStyle, i, selector, styles;
+    chartStyle = void 0;
+    selector = void 0;
+    i = 0;
+    while (i <= document.styleSheets.length - 1) {
+      if (document.styleSheets[i].href && document.styleSheets[i].href.indexOf("c3.css") !== -1) {
+        if (document.styleSheets[i].rules !== undefined) {
+          chartStyle = document.styleSheets[i].rules;
+        } else {
+          chartStyle = document.styleSheets[i].cssRules;
+        }
+      }
+      i++;
+    }
+    if (chartStyle !== null && chartStyle !== undefined) {
+      changeToDisplay = function() {
+        if (d3.select(this).style("visibility") === "hidden" || d3.select(this).style("opacity") === "0") {
+          d3.select(this).style("display", "none");
+        }
+      };
+      i = 0;
+      while (i < chartStyle.length) {
+        if (chartStyle[i].type === 1) {
+          selector = chartStyle[i].selectorText;
+          styles = makeStyleObject(chartStyle[i]);
+          d3.selectAll("svg *").each(changeToDisplay);
+          d3.selectAll(selector).each(function() {
+            if (d3.select(this)[0][0].nodeName !== 'path') {
+              return d3.select(this).style(styles);
+            }
+          });
+        }
+        i++;
+      }
+    }
+  };
+  return makeStyleObject = function(rule) {
+    var output, s, styleDec;
+    styleDec = rule.style;
+    output = {};
+    s = void 0;
+    s = 0;
+    while (s < styleDec.length) {
+      output[styleDec[s]] = styleDec[styleDec[s]];
+      s++;
+    }
+    return output;
   };
 });
 

@@ -237,22 +237,77 @@ app.controller('chartCtrl', ($scope, $http, $timeout)->
 				show: true
 		)
 
-	# image
 	$scope.updateImage = ()->
-		html2canvas( document.getElementById('demoChart'), 
-			onrendered: (canvas)->
-				d3.selectAll("svg text").style
-					'font-size':'12px'
-				d3.selectAll(".c3-axis path").style
-					'fill':'none', 'stroke': '#000'
-				d3.selectAll(".c3-chart-arc path").style
-					'stroke': '#FFFFFF'
-				d3.selectAll(".c3-chart-arc text").style
-					'fill': '#FFFFFF'
-				console.log canvas.toDataURL("png"), 'aa'
-				d3.select('#chartImg').attr('src',canvas.toDataURL("png"))
-				# $("#chartImg").attr('src',canvas.toDataURL("png"))
-		)
+		$("defs").remove()
+		inlineAllStyles()
+
+		canvas = document.getElementById('canvas')
+		canvas.width = parseInt d3.select(".demo").style('width')
+		canvas.height = parseInt d3.select(".demo").style('height')
+		canvasContext = canvas.getContext("2d")
+		svg = document.querySelector(".demo > svg").outerHTML
+		# svg = $.trim($(".demo > svg")[0].outerHTML)
+		canvasContext.drawSvg svg, 0, 0
+		d3.select("#downloadImg").attr("href", canvas.toDataURL("png")).attr "download", ->
+		  "_llamacharts.png"
+		d3.select("#chartImg").attr('src',canvas.toDataURL("png"))
+
+	inlineAllStyles = ->
+		chartStyle = undefined
+		selector = undefined
+		
+		# Get rules from c3.css
+		i = 0
+
+		while i <= document.styleSheets.length - 1
+			if document.styleSheets[i].href and document.styleSheets[i].href.indexOf("c3.css") isnt -1
+				if document.styleSheets[i].rules isnt `undefined`
+					chartStyle = document.styleSheets[i].rules
+				else
+					chartStyle = document.styleSheets[i].cssRules
+			i++
+		if chartStyle isnt null and chartStyle isnt `undefined`
+		  
+		  # SVG doesn't use CSS visibility and opacity is an attribute, not a style property. Change hidden stuff to "display: none"
+			changeToDisplay = ->
+				d3.select(this).style "display", "none"  if d3.select(this).style("visibility") is "hidden" or d3.select(this).style("opacity") is "0"
+
+				return
+
+			
+			# Inline apply all the CSS rules as inline
+			i = 0
+			while i < chartStyle.length
+				if chartStyle[i].type is 1
+					selector = chartStyle[i].selectorText
+					styles = makeStyleObject(chartStyle[i])
+					d3.selectAll("svg *").each changeToDisplay
+				# 這邊還沒套
+					# $(selector).not($(".c3-chart path")).css styles
+					d3.selectAll(selector).each ()->
+						if d3.select(this)[0][0].nodeName isnt 'path'
+							d3.select(this).style styles
+
+
+				# $(".c3-chart path").filter(->
+				# 	$(this).css("fill") is "none"
+				# ).attr "fill", "none"
+				# $(".c3-chart path").filter(->
+				# 	not $(this).css("fill") is "none"
+				# ).attr "fill", ->
+				# 	$(this).css "fill"
+
+				i++
+		return
+	makeStyleObject = (rule) ->
+		styleDec = rule.style
+		output = {}
+		s = undefined
+		s = 0
+		while s < styleDec.length
+			output[styleDec[s]] = styleDec[styleDec[s]]
+			s++
+		output
 
 )
 
