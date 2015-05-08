@@ -1,9 +1,7 @@
-app = angular.module('starter', ['ui.bootstrap', 'vr.directives.slider', 'ngTouch'])
+app = angular.module('starter', ['ui.bootstrap', 'vr.directives.slider', 'ngTouch', 'angularChart'])
 
 app.controller('appCtrl', ($scope, $http)->
 )	
-
-
 
 app.controller('chartCtrl', ($scope, $http, $timeout)->
 	$scope.appModel = {}
@@ -237,10 +235,26 @@ app.controller('chartCtrl', ($scope, $http, $timeout)->
 			# 	enabled: true
 			subchart:
 				show: true
-		)		
+		)
+
+	# image
+	$scope.updateImage = ()->
+		html2canvas( document.getElementById('demoChart'), 
+			onrendered: (canvas)->
+				d3.selectAll("svg text").style
+					'font-size':'12px'
+				d3.selectAll(".c3-axis path").style
+					'fill':'none', 'stroke': '#000'
+				d3.selectAll(".c3-chart-arc path").style
+					'stroke': '#FFFFFF'
+				d3.selectAll(".c3-chart-arc text").style
+					'fill': '#FFFFFF'
+				console.log canvas.toDataURL("png"), 'aa'
+				d3.select('#chartImg').attr('src',canvas.toDataURL("png"))
+				# $("#chartImg").attr('src',canvas.toDataURL("png"))
+		)
+
 )
-
-
 
 chartType = [
 	{

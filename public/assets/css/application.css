@@ -521,12 +521,10 @@ a { cursor: pointer; }
 .header-banner { height: 120px; position: relative; width: 100%; display: -webkit-flex; display: flex; -webkit-align-items: center; align-items: center; margin-bottom: 2.25em; -webkit-transition: height 0.5s; -o-transition: height 0.5s; transition: height 0.5s; }
 .header-banner.index { height: 240px; }
 
-.banner-imgae { position: absolute; background: url('../../../images/banner141229.jpg') center center; -moz-background-size: cover; -o-background-size: cover; -webkit-background-size: cover; background-size: cover; background-color: #574751; -webkit-filter: grayscale(90%); filter: grayscale(90%); top: 0; left: 0; right: 0; bottom: 0; }
+.banner-imgae { position: absolute; background: url('../../../images/banner150423.jpg') center center; -moz-background-size: cover; -o-background-size: cover; -webkit-background-size: cover; background-size: cover; background-color: #574751; -webkit-filter: grayscale(50%); filter: grayscale(50%); top: 0; left: 0; right: 0; bottom: 0; }
 
 .index-ico { width: 60%; height: auto; margin: 0 auto; }
 
 .index-section { display: none; opacity: 0; -webkit-transition: opacity 0.5s; -o-transition: opacity 0.5s; transition: opacity 0.5s; }
 .index-section.in { opacity: 1; }
 .index-section.active { display: block; }
-
-/*# sourceMappingURL=application.css.map */

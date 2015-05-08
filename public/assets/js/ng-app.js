@@ -1,6 +1,6 @@
 var app, chartType;
 
-app = angular.module('starter', ['ui.bootstrap', 'vr.directives.slider', 'ngTouch']);
+app = angular.module('starter', ['ui.bootstrap', 'vr.directives.slider', 'ngTouch', 'angularChart']);
 
 app.controller('appCtrl', function($scope, $http) {});
 
@@ -228,7 +228,7 @@ app.controller('chartCtrl', function($scope, $http, $timeout) {
     return renderChart(dataset, x);
   };
   chart = {};
-  return renderChart = function(dataset, x) {
+  renderChart = function(dataset, x) {
     var chartCase;
     chartCase = $scope.appModel.chartType.key;
     return chart = c3.generate({
@@ -255,6 +255,27 @@ app.controller('chartCtrl', function($scope, $http, $timeout) {
       },
       subchart: {
         show: true
+      }
+    });
+  };
+  return $scope.updateImage = function() {
+    return html2canvas(document.getElementById('demoChart'), {
+      onrendered: function(canvas) {
+        d3.selectAll("svg text").style({
+          'font-size': '12px'
+        });
+        d3.selectAll(".c3-axis path").style({
+          'fill': 'none',
+          'stroke': '#000'
+        });
+        d3.selectAll(".c3-chart-arc path").style({
+          'stroke': '#FFFFFF'
+        });
+        d3.selectAll(".c3-chart-arc text").style({
+          'fill': '#FFFFFF'
+        });
+        console.log(canvas.toDataURL("png"), 'aa');
+        return d3.select('#chartImg').attr('src', canvas.toDataURL("png"));
       }
     });
   };
